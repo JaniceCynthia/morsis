@@ -1,4 +1,10 @@
 /* Morsis on the scrollcraft floor. Tokens first; the engine derives the rest. */
+/* Fonts are bundled (Fontsource) so the demo never depends on a font CDN. */
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/geist/index.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/500.css";
 :root {
   --abyss: #050A06;
   --forest: #13240F;
@@ -18,7 +24,7 @@
   --sc-accent: var(--lime);
   --sc-accent-ink: var(--abyss);
   --sc-font-display: "Instrument Serif", "Times New Roman", serif;
-  --sc-font-text: "Geist", system-ui, sans-serif;
+  --sc-font-text: "Geist Variable", "Geist", system-ui, sans-serif;
   --sc-font-mono: "Geist Mono", ui-monospace, monospace;
   --sc-shadow-color: 110 45% 2%;
   --bar-h: 64px;
