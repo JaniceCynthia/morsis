@@ -147,7 +147,7 @@ img[data-optional].is-missing { visibility: hidden; }
 @media (max-width: 700px) { .hud { top: auto; bottom: auto; top: calc(var(--bar-h) + var(--sc-3)); right: var(--sc-3); width: 11rem; padding: var(--sc-3); } }
 
 .hotspots { position: absolute; inset: 0; z-index: calc(var(--sc-z-copy) - 1); pointer-events: none; }
-.spot { position: absolute; left: var(--x); top: var(--y); display: inline-flex; align-items: center; gap: var(--sc-2); padding: 0; background: none; border: 0; color: var(--sc-ink); font: 500 var(--sc-t-xs) / 1 var(--sc-font-mono); letter-spacing: var(--sc-track-wide); text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(6px); transition: opacity 260ms var(--sc-ease-out), transform 260ms var(--sc-ease-out); }
+.spot { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: var(--sc-2); padding: 0; background: none; border: 0; color: var(--sc-ink); font: 500 var(--sc-t-xs) / 1 var(--sc-font-mono); letter-spacing: var(--sc-track-wide); text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(6px); transition: opacity 260ms var(--sc-ease-out), transform 260ms var(--sc-ease-out); }
 .spot.is-on { opacity: 1; transform: none; pointer-events: auto; }
 .spot i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--sc-accent); position: relative; }
 .spot i::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--sc-accent); }
@@ -177,8 +177,9 @@ img[data-optional].is-missing { visibility: hidden; }
 .ft1__intro { top: calc(var(--bar-h) + var(--sc-7)); bottom: auto; max-width: 30rem; }
 .ft1__intro .display { font-size: var(--sc-t-2xl); margin-left: auto; }
 .ft1__intro .body { margin-left: auto; }
-.layers { list-style: none; margin: 0; padding: 0; position: absolute; z-index: var(--sc-z-copy); right: var(--sc-gutter); bottom: clamp(3rem, 12vh, 8rem); width: min(24rem, 80vw); }
-.layers li { position: absolute; inset: auto 0 0 0; padding: var(--sc-5); border-radius: var(--sc-r-md); background: color-mix(in oklab, var(--abyss) 62%, transparent); backdrop-filter: blur(10px); box-shadow: var(--sc-edge), var(--sc-e2); }
+/* Top-right is the one region the exploded parts never reach. */
+.layers { list-style: none; margin: 0; padding: 0; position: absolute; z-index: var(--sc-z-copy); right: var(--sc-gutter); top: calc(var(--bar-h) + var(--sc-5)); width: min(22rem, 80vw); }
+.layers li { position: absolute; inset: 0 0 auto 0; padding: var(--sc-5); border-radius: var(--sc-r-md); background: color-mix(in oklab, var(--abyss) 62%, transparent); backdrop-filter: blur(10px); box-shadow: var(--sc-edge), var(--sc-e2); }
 .layers .mono { font-size: var(--sc-t-xs); color: var(--sc-accent); letter-spacing: var(--sc-track-wide); text-transform: uppercase; }
 .layers h3 { font-family: var(--sc-font-display); font-weight: 400; font-size: var(--sc-t-xl); margin: var(--sc-2) 0 0; }
 .layers p { font-size: var(--sc-t-sm); line-height: 1.55; color: var(--sc-ink-soft); margin: var(--sc-2) 0 0; }

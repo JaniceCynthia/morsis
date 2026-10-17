@@ -88,7 +88,7 @@
   </section>
 
   <!-- THE DESCENT · scrub. The peak: one continuous camera move, sky to seabed. -->
-  <section id="descent" class="descent" data-sc-act="scrub" data-sc-span="7.5" data-sc-dwell="0.18" data-sc-drift="#050A06">
+  <section id="descent" class="descent" data-sc-act="scrub" data-sc-span="8" data-sc-clip-map="travel" data-sc-drift="#050A06">
     <div data-sc-stage>
       <img class="sc-stage__poster" src="/assets/img/posters/descent.webp" alt="" data-optional>
       <video data-sc-scrub data-sc-src="/assets/video/descent.mp4" data-sc-src-mobile="/assets/video/descent-m.mp4" muted playsinline></video>
@@ -102,30 +102,30 @@
         <ol class="hud__route" aria-hidden="true"><li data-zone="sky">Sky</li><li data-zone="land">Land</li><li data-zone="sea">Sea</li><i id="hud-dot"></i></ol>
       </aside>
 
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.02 0.3">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.03 0.27">
         <p class="label">Zone A · Sky</p>
         <h2 class="display">The air is full of syntax.</h2>
         <p class="body">Birds string calls together with rules. Ravens recruit allies to food with a dedicated yell. Starlings never stop learning new sounds.</p>
       </div>
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.36 0.62">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.34 0.71">
         <p class="label">Zone B · Land</p>
         <h2 class="display">Some messages travel through your feet.</h2>
         <p class="body">Elephant rumbles sit below human hearing and ripple through the ground for kilometres. Prairie dogs pack the colour, size and speed of an intruder into one alarm call.</p>
       </div>
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.7 0.97">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.74">
         <p class="label">Zone C · Sea</p>
         <h2 class="display">Down here, sound travels four times faster.</h2>
         <p class="body">Water carries voices across ocean basins. Humpback songs spread between populations like culture. Dolphins answer to the whistle that works as their name.</p>
       </div>
 
-      <!-- Hotspots: positions are tuned against the final clip (see src/sections/descent.ts). -->
+      <!-- Hotspots: data-t is a window in film seconds, data-path keyframes the animal's position in the 16:9 frame (see src/sections/descent.ts). -->
       <div class="hotspots">
-        <button class="spot" data-species="raven" data-window="0.03 0.16" style="--x:64%;--y:38%" type="button"><i></i><span>Raven</span></button>
-        <button class="spot" data-species="starling" data-window="0.17 0.32" style="--x:70%;--y:30%" type="button"><i></i><span>Starling</span></button>
-        <button class="spot" data-species="elephant" data-window="0.37 0.52" style="--x:62%;--y:58%" type="button"><i></i><span>Elephant</span></button>
-        <button class="spot" data-species="prairie" data-window="0.53 0.66" style="--x:58%;--y:66%" type="button"><i></i><span>Prairie dog</span></button>
-        <button class="spot" data-species="humpback" data-window="0.72 0.86" style="--x:66%;--y:56%" type="button"><i></i><span>Humpback</span></button>
-        <button class="spot" data-species="dolphin" data-window="0.86 0.99" style="--x:60%;--y:44%" type="button"><i></i><span>Dolphin</span></button>
+        <button class="spot" data-species="raven" data-t="0 2.9" data-path="0:0.45,0.48 1:0.51,0.49 1.8:0.64,0.5 2.6:0.84,0.51" type="button"><i></i><span>Raven</span></button>
+        <button class="spot" data-species="starling" data-t="3.4 7.6" data-path="3.4:0.47,0.34 7.6:0.47,0.34" type="button"><i></i><span>Starling</span></button>
+        <button class="spot" data-species="elephant" data-t="8.2 12.6" data-path="8.2:0.46,0.44 12.6:0.46,0.44" type="button"><i></i><span>Elephant</span></button>
+        <button class="spot" data-species="prairie" data-t="14.4 18.3" data-path="14.4:0.51,0.56 18.3:0.51,0.56" type="button"><i></i><span>Prairie dog</span></button>
+        <button class="spot" data-species="humpback" data-t="18.7 23" data-path="18.7:0.39,0.76 20:0.37,0.75 21.5:0.43,0.67 23:0.47,0.5" type="button"><i></i><span>Humpback</span></button>
+        <button class="spot" data-species="dolphin" data-t="23.2 25.1" data-path="23.2:0.45,0.86 24.2:0.47,0.7 25:0.52,0.66" type="button"><i></i><span>Dolphin</span></button>
       </div>
     </div>
   </section>
@@ -151,7 +151,7 @@
       <div class="ft1__fallback" aria-hidden="true"></div>
       <div class="sc-scrim sc-scrim--trail" aria-hidden="true"></div>
       <div class="sc-copy sc-copy--trail ft1__intro" data-sc-cue="0 0.2 0">
-        <h2 class="display">Inside the FT-1 field transmitter.</h2>
+        <h2 class="display">Inside the FT&#8209;1 field transmitter.</h2>
         <p class="body">Four layers turn a sentence into a signal an animal can parse, and a call back into words.</p>
       </div>
       <ol class="layers">

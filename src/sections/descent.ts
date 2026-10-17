@@ -1,33 +1,78 @@
 // The descent: HUD readout, zone ambience and animal hotspots, all keyed to the
-// same act progress the engine uses to scrub the film.
+// film's own playhead (the engine scrubs the <video>), so they stay locked to
+// what is on screen whatever the scroll mapping does. Before the clip loads,
+// act progress stands in for it.
 import { mixAmbience, speak, isReady } from "../audio/engine";
 import { scriptedReply } from "../decode/scripted";
 import type { SpeciesKey } from "../decode/species";
 import { $, $$, actProgress, clamp } from "./dom";
 import { openInspector } from "./atlas";
 
-// Zone boundaries in act progress. Tuned to the D1–D5 segment boundaries once
-// public/assets/video/manifest.json exists (see loadManifest below).
-let SKY_END = 0.33;
-let LAND_END = 0.66;
+// Film timeline in seconds (public/assets/video/manifest.json). Zone changes sit
+// where the picture actually changes medium: the savanna arrives mid-D2, and D4
+// cuts from the prairie to the waterline at ~18.5 s.
+let DUR = 25.042;
+const SKY_END = 7.5;
+const SEA_START = 18.5;
+const DEPTH_END = 24.6;
+const FRAME_ASPECT = 16 / 9;
 
 const fmt = new Intl.NumberFormat("en-GB");
 
 export function initDescent() {
   const act = $("#descent");
+  const stage = $("[data-sc-stage]", act);
+  const video = act.querySelector<HTMLVideoElement>("video[data-sc-scrub]");
   const alt = $("#hud-alt");
   const medium = $("#hud-medium");
   const speed = $("#hud-speed");
   const dot = $("#hud-dot");
   const route = $$("li[data-zone]", act);
+  // data-path is "t:fx,fy t:fx,fy …": the animal's position in the frame at
+  // film times, so a marker can follow a bird across the sky.
   const spots = $$<HTMLButtonElement>(".spot", act).map((el) => {
-    const [a, b] = (el.dataset.window || "0 1").split(" ").map(Number);
-    return { el, a, b, k: el.dataset.species as SpeciesKey };
+    const [a, b] = (el.dataset.t || "0 0").split(" ").map(Number);
+    const path = (el.dataset.path || "").trim().split(/\s+/).map((kf) => {
+      const [t, xy] = kf.split(":");
+      const [x, y] = xy.split(",").map(Number);
+      return { t: Number(t), x, y };
+    });
+    return { el, a, b, path, k: el.dataset.species as SpeciesKey };
   });
+  const at = (path: { t: number; x: number; y: number }[], t: number) => {
+    if (t <= path[0].t) return path[0];
+    for (let i = 1; i < path.length; i++) {
+      if (t <= path[i].t) {
+        const p0 = path[i - 1], p1 = path[i];
+        const f = (t - p0.t) / (p1.t - p0.t || 1);
+        return { t, x: p0.x + (p1.x - p0.x) * f, y: p0.y + (p1.y - p0.y) * f };
+      }
+    }
+    return path[path.length - 1];
+  };
   loadManifest();
+
+  // Hotspots are authored in frame coordinates; map them through object-fit: cover.
+  const cover = { ox: 0, oy: 0, w: 1, h: 1 };
+  const measure = () => {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const s = Math.max(W / FRAME_ASPECT, H);
+    cover.w = s * FRAME_ASPECT;
+    cover.h = s;
+    cover.ox = (W - cover.w) / 2;
+    cover.oy = (H - cover.h) / 2;
+    last = -1;
+  };
+
+  const filmTime = () => {
+    if (video && video.readyState >= 1 && Number.isFinite(video.duration) && video.duration > 0) return video.currentTime;
+    return actProgress(act) * DUR;
+  };
 
   let last = -1;
   let onScreen = false;
+  measure();
+  new ResizeObserver(measure).observe(stage);
   new IntersectionObserver(([e]) => {
     onScreen = e.isIntersecting;
     if (!onScreen) mixAmbience({ sky: 0, land: 0, sea: 0 });
@@ -36,14 +81,14 @@ export function initDescent() {
   const frame = () => {
     requestAnimationFrame(frame);
     if (!onScreen) return;
-    const p = actProgress(act);
-    if (Math.abs(p - last) < 0.0005) return;
-    last = p;
+    const t = filmTime();
+    if (Math.abs(t - last) < 0.01) return;
+    last = t;
 
-    const zone = p < SKY_END ? "sky" : p < LAND_END ? "land" : "sea";
+    const zone = t < SKY_END ? "sky" : t < SEA_START ? "land" : "sea";
     if (zone === "sky") {
-      const m = 1200 * (1 - p / SKY_END);
-      alt.textContent = `${fmt.format(Math.round(m / 10) * 10)} m`;
+      const m = 1200 * (1 - t / SKY_END);
+      alt.textContent = `${fmt.format(Math.max(0, Math.round(m / 10) * 10))} m`;
       medium.textContent = "Air";
       speed.textContent = "343 m/s";
     } else if (zone === "land") {
@@ -51,25 +96,31 @@ export function initDescent() {
       medium.textContent = "Soil · seismic";
       speed.textContent = "≈ 250 m/s";
     } else {
-      const d = 40 * clamp((p - LAND_END) / (1 - LAND_END - 0.04), 0, 1);
-      alt.textContent = `−${Math.round(d)} m`;
+      const d = 40 * clamp((t - SEA_START) / (DEPTH_END - SEA_START), 0, 1);
+      alt.textContent = d < 0.5 ? "Waterline" : `−${Math.round(d)} m`;
       medium.textContent = "Seawater";
       speed.textContent = "1,480 m/s";
     }
-    dot.style.setProperty("--d", p.toFixed(3));
+    dot.style.setProperty("--d", (t / DUR).toFixed(3));
     route.forEach((li) => li.classList.toggle("is-on", li.dataset.zone === zone));
 
-    // Equal-power crossfade across each zone boundary.
-    const band = 0.06;
-    const w = (edge: number) => clamp((p - (edge - band)) / (2 * band), 0, 1);
-    const toLand = w(SKY_END);
-    const toSea = w(LAND_END);
-    mixAmbience({ sky: Math.cos((toLand * Math.PI) / 2), land: Math.sin((toLand * Math.PI) / 2) * Math.cos((toSea * Math.PI) / 2), sea: Math.sin((toSea * Math.PI) / 2) });
+    // Equal-power crossfades: a slow blend into land, a short one at the sea cut.
+    const w = (edge: number, band: number) => clamp((t - (edge - band)) / (2 * band), 0, 1);
+    const toLand = w(SKY_END, 1.6);
+    const toSea = w(SEA_START, 0.5);
+    mixAmbience({
+      sky: Math.cos((toLand * Math.PI) / 2),
+      land: Math.sin((toLand * Math.PI) / 2) * Math.cos((toSea * Math.PI) / 2),
+      sea: Math.sin((toSea * Math.PI) / 2),
+    });
 
     for (const s of spots) {
-      const on = p >= s.a && p <= s.b;
+      const on = t >= s.a && t <= s.b;
       s.el.classList.toggle("is-on", on);
       s.el.tabIndex = on ? 0 : -1;
+      if (!on || !s.path.length) continue;
+      const pos = at(s.path, t);
+      s.el.style.translate = `${Math.round(cover.ox + pos.x * cover.w)}px ${Math.round(cover.oy + pos.y * cover.h)}px`;
     }
   };
   requestAnimationFrame(frame);
@@ -93,14 +144,8 @@ async function loadManifest() {
     const res = await fetch("/assets/video/manifest.json");
     if (!res.ok) return;
     const m = await res.json();
-    const segs: { id: string; start: number; end: number }[] = m?.descent?.segments || [];
-    const dur: number = m?.descent?.duration || 0;
-    if (segs.length === 5 && dur > 0) {
-      // D2 lands on the savanna and D4 reaches the waterline: switch zones halfway through each.
-      SKY_END = (segs[1].start + segs[1].end) / 2 / dur;
-      LAND_END = (segs[3].start + segs[3].end) / 2 / dur;
-    }
+    if (m?.descent?.duration > 0) DUR = m.descent.duration;
   } catch {
-    /* keep defaults */
+    /* keep default */
   }
 }
