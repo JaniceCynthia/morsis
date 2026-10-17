@@ -187,7 +187,7 @@ Work strictly in [docs/ASSETS.md](docs/ASSETS.md) order, run `generate cost` bef
 - **Demoable:** all 3 TASKS.md deliverables.
 
 ### Phase 7: Deploy and demo hardening (30 min)
-- [ ] **Jonathan:** run `npx vercel login`. Then deploy with `GEMINI_API_KEY` as an environment variable. If the deploy can't happen, demo from `npm run build && npm run preview` on the laptop.
+- [ ] **Jonathan:** run `pnpm dlx vercel login`. Then deploy with `GEMINI_API_KEY` as an environment variable. If the deploy can't happen, demo from `pnpm run build && pnpm run preview` on the laptop.
 - [ ] Run Lighthouse and check the frame-load budget. Demo-run with Wi-Fi off to confirm the scripted fallback. Check reduced motion and the mobile layout.
 - [ ] Write a 90-second demo script in `docs/DEMO.md`: hero bubble → descent → click the humpback → atlas → Open a channel → Eavesdrop on the two humpbacks → FT-1 → brand board.
 - [ ] Final credibility pass with the TASKS.md demo-day checklist.
@@ -231,5 +231,5 @@ Three sessions, each owning its own files:
 ## 7. Actions only Jonathan can take
 - Create the Gemini API key (Phase 0).
 - Top up Higgsfield when told the balance can't cover the next job (Phase 1 and later).
-- `npx vercel login` (Phase 7), or decide to demo locally.
+- `pnpm dlx vercel login` (Phase 7), or decide to demo locally.
 - Tell us the demo time, so the cut lines can be applied early if needed.
