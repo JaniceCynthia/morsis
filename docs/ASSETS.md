@@ -24,6 +24,21 @@ Every generated asset, which tool made it, its prompt seed, what it costs and wh
 | Hero loop H-01 (Seedance 2.5) | 2 | 35 |
 | Habitat cards P-*, score M-01, retries | 2 | ~25 |
 
+**Actual spend (2026-10-18, from `higgsfield account transactions`).** The plan became 1,200 credits after the trial ended, so quality settings were used throughout.
+
+| Model | Used for | Credits |
+|---|---|---|
+| GPT Image 2.5 (high/2k, plus one medium) | T-01/T-02, K1–K6, S-*, F-01/F-02, TP-01–04, P-* | 67.00 |
+| Nano Banana Pro · Soul Location | T-01/T-02 tests | 4.12 |
+| Kling 3.0 Pro | D1–D5 first pass, D4 re-roll, V-FT1, L-* | 96.25 |
+| Seedance 2.5 1080p | D1, D2, D3, D4 re-rolls, H-01 (one failed D4 job refunded) | 400.00 |
+| Seed Audio 1.0 | A-* (30 calls + 4 re-rolls + 1 test) | 50.30 |
+| Mirelo SFX | B-* (3 × 22 s) + 1 test | 17.25 |
+| Sonilo Music | M-01 | 1.38 |
+| Meshy 7 | M-* (6 × 38) | 228.00 |
+| Tripo H3.1 | 3D model test (raven) | 18.00 |
+| **Total** | | **882.30, leaving 317.70** |
+
 Tier 2 is spent in the order listed. The 3D models come first because the Specimen atlas is the weakest part of the concept.
 
 ## Style keys (prepended to every prompt in that family)
@@ -35,6 +50,8 @@ Tier 2 is spent in the order listed. The 3D models come first because the Specim
 - **Credibility gate:** reject any asset that reads as a pet gadget, toy, collar, cartoon or joke.
 
 ## Status log (2026-10-18)
+
+- **09:58: SPENDING FROZEN** at Build's request until Jonathan confirms a new budget. Spend is 882.3 against the plan's ~200, and the balance is 317.7. No generation jobs, re-rolls or uploads; local ffmpeg work only. Files under `public/assets/` must not be moved or renamed.
 
 - **08:30:** the CLI was blocked because the account was still a trial (`only_website_usage_on_trial_is_available`). 0 spent.
 - **08:58:** Jonathan ended the trial. The Plus plan now has **1,200 credits**, so Tier 1 and Tier 2 both fit. Quality settings are used throughout (no draft modes).
@@ -74,7 +91,7 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 | K4 | Grassland burrows, prairie dog sentry, horizon opens toward a coastline | sentry prairie dog upright at its burrow, wide plains running to a distant sea | gpt_image_2_5 high/2k, K3 ref | 2.75 | ✅ `K4.webp` |
 | K5 | Over/under split at the waterline, a Morsis hydrophone buoy | half above, half below the surface, graphite buoy with a lime band, humpback shape below | gpt_image_2_5 high/2k, K4 ref | 2.75 | ✅ `K5.webp` |
 | K6 | 40 m down, blue twilight, dolphins and a humpback | deep blue water column, god-rays, bottlenose pod, distant humpback | gpt_image_2_5 high/2k, K5 ref | 2.75 | ✅ `K6.webp`. Contact sheet: `img/keyframes/_contact-sheet.jpg` |
-| D1–D5 | Kn → Kn+1, one continuous downward crane move, no cuts | *"Seamless continuous camera descent from the first frame to the last frame, slow and steady, no cut, documentary realism"*, plus a per-clip action line | `kling3_0 --mode pro --sound off --duration 5`, start/end images | 8.75 each | ✅ `video/D1–D5.mp4` (1912×1080, 24 fps), `video/descent.mp4` + `descent-m.mp4`, `video/manifest.json`, `img/posters/descent.webp`. **Quality notes:** D1 is good (it sinks into a cloud bank and breaks out over the murmuration). D5 is excellent (a true descent below the waterline). D2 and D3 bridge their scenes with dissolves rather than camera moves. D4 has a near-hard cut from prairie to sea. 🟨 D4 is being re-rolled (Kling with a stronger motion prompt, and Seedance 2.5 1080p at 80); the better take will replace it at the same 5 s length. |
+| D1–D5 | Kn → Kn+1, one continuous downward crane move, no cuts | *"Seamless continuous camera descent from the first frame to the last frame, slow and steady, no cut, documentary realism"*, plus a per-clip action line | `kling3_0 --mode pro --sound off --duration 5`, start/end images; **final: all five on `seedance_2_5 --mode omni_reference --resolution 1080p --generate_audio false`** (80 each) | 43.75 Kling first pass + 320 Seedance | ✅ `video/D1–D5.mp4` (1912×1080, 24 fps), `video/descent.mp4` + `descent-m.mp4`, `video/manifest.json`, `img/posters/descent.webp`. **Quality notes:** D1 is good (it sinks into a cloud bank and breaks out over the murmuration). D5 is excellent (a true descent below the waterline). D2 and D3 bridge their scenes with dissolves rather than camera moves. D4 had a near-hard cut from prairie to sea. **Re-rolls:** D4 was re-rendered on Kling with a stronger motion prompt (8.75; better, but still jumpy) and on Seedance 2.5 1080p (80; the first attempt failed and was refunded). **Seedance won clearly** (one genuine flight from the prairie dog, over the sea, to the buoy, then down to the waterline) and is now `D4.mp4`. D2 on Seedance is also better (the murmuration sweep carries the forest→savanna change) and is now `D2.mp4`. D3 on Seedance glides between the matriarch and calf to reveal the prairie dog. D1 on Seedance sinks through the cloud deck (a full white-out) and breaks out over the forest, replacing Kling's sideways fog wipe. **Final descent: all five clips are Seedance 2.5 1080p**, one continuous camera move. Every swap keeps 121 frames, so `video/manifest.json` timings are unchanged (25.042 s, 601 frames). Overview sheet: `img/keyframes/_descent-sheet.jpg`. The Kling originals are in `scratchpad/out/kling-originals/`. |
 
 **Post-processing (changed 2026-10-18 at Build's request: the scroll-craft engine scrubs a `<video>` directly, so there are no WebP frame sequences):**
 1. Keep the raw clips as `public/assets/video/D1.mp4` … `D5.mp4` and `V-FT1.mp4`.
@@ -100,17 +117,18 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 
 | Species | Reference S-* (SPECIMEN) | 3D M-* (Tier 2) | Loop L-* (Tier 2, hero species only) |
 |---|---|---|---|
-| Raven | S-raven ✅ 2.75 | M-raven 🟨 38 | L-raven ⬜ 8.75 |
-| Starling | S-starling ✅ 2.75 | M-starling ⬜ | — |
-| Elephant | S-elephant ✅ 2.75 | M-elephant ⬜ | L-elephant ⬜ 8.75 |
-| Prairie dog | S-prairie ✅ 2.75 | M-prairie ⬜ | — |
-| Humpback whale | S-humpback ✅ 2.75 | M-humpback ⬜ | L-humpback ⬜ 8.75 |
-| Bottlenose dolphin | S-dolphin ✅ 2.75 | M-dolphin ⬜ | — |
+| Raven | S-raven ✅ 2.75 | M-raven ✅ 38 | L-raven ✅ 8.75 |
+| Starling | S-starling ✅ 2.75 | M-starling ✅ 38 | — |
+| Elephant | S-elephant ✅ 2.75 | M-elephant ✅ 38 | L-elephant ✅ 8.75 |
+| Prairie dog | S-prairie ✅ 2.75 | M-prairie ✅ 38 | — |
+| Humpback whale | S-humpback ✅ 2.75 | M-humpback ✅ 38 | L-humpback ✅ 8.75 |
+| Bottlenose dolphin | S-dolphin ✅ 2.75 | M-dolphin ✅ 38 | — |
 
 - **S-\***: `img/specimens/S-<species>.webp`, made with gpt_image_2_5 high/2k at 1:1 (S-raven is T-02's winner). All six pass the gate.
 - **3D test (Tier 2):** raven on Meshy 7 (38) vs Tripo H3.1 detailed (18). **Meshy wins clearly** (crisp beak, feet and feathers; Tripo's head was blobby), so Meshy is used for all six.
 - **3D:** run `meshy_v7_image_to_3d` with the S-* image, `enable_pbr=true`, `target_polycount` about 30k, as GLB. Then compress with gltf-transform (Draco + WebP textures, under 3 MB each). **Tier 1 fallback:** the concept's procedural three.js animals. Any bad output is replaced with a CC-BY Sketchfab model, credited in the footer.
-- **Loops:** Kling 3.0 Pro with the same image as start and end frame so they loop seamlessly. They appear in the Specimen atlas header and the zone panels.
+- **3D output:** `models/<species>.glb`, each about 30k tris, Draco geometry plus WebP textures (≤1536 px, PBR: base colour, metallic-roughness, normal), 0.7–2.3 MB. The longest axis is about 1.9 units and the origin is **not** centred, so recentre with a Box3 in the viewer. The `gltf-transform optimize --texture-compress webp` step crashes on these textures (a sharp/libvips colourspace bug), so textures are re-encoded with PIL in `scratchpad/tools/tex.mjs`, then `gltf-transform draco` is applied. Geometry is not simplified.
+- **Loops:** Kling 3.0 Pro with the same image as start and end frame so they loop seamlessly. They appear in the Specimen atlas header and the zone panels. **Done:** `video/L-{raven,elephant,humpback}.mp4`, made from the P-* habitat cards (start = end), 1920×1080, 120 frames at 24 fps (the duplicate closing frame is dropped), H.264 with faststart and no audio, 0.8–1.8 MB. The seams are near-identical (PSNR 38–43 dB), so play them with `loop muted playsinline`. Motion is subtle: the raven calls, the elephants sway, the whale glides.
 
 ## Audio (Tier 1). See [ADR 0001](adr/0001-animal-voices-from-sample-banks.md)
 
@@ -123,7 +141,7 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 | A-humpback-1…5 | Moan, upsweep, grunt, cry, song phrase fragment | same | | ✅ (3 regenerated) |
 | A-dolphin-1…5 | Signature whistle up, down, warble, click train, burst pulse | same | | ✅ (1 and 5 regenerated; 1 is a steady tonal whistle with little sweep) |
 | B-sky / B-land / B-sea | 20 s loopable zone ambience beds (wind and high air · grass, insects, distant herd · underwater pressure and shipping hum) | `mirelo_text_to_audio --duration 22`, looped to 20 s with a 2 s equal-power crossfade | 5.5 each | ✅ `audio/ambience/{sky,land,sea}.{webm,mp3}`. Land (insects and wind) is the best. B-sea has two level steps from the source; it's fine under the mix, but it's the first candidate to re-roll. |
-| M-01 (Tier 2) | 20 s ambient score bed, sparse and wondrous, loopable | Sonilo Music | 1.25 | ⬜ |
+| M-01 (Tier 2) | 20 s ambient score bed, sparse and wondrous, loopable | Sonilo Music, 22 s | 1.38 | ✅ `audio/score/m01.{webm,mp3}`: a 17 s seamless loop taken from the steady middle section (the source fades in and out). |
 
 Each sample was checked on a spectrogram (`scratchpad/A-sheet.jpg`); raven-5 and humpback-3 were regenerated. Calls are 0.5–4.7 s, trimmed to the active span, high-passed per species (raven 180 Hz, starling 500, prairie 350, dolphin 900, elephant and humpback 15). Every sample: mono, trimmed, normalised to −1 dBFS peak, exported as `.webm` (Opus) with an `.mp3` fallback, in `public/assets/audio/{species}/`. UI sounds (transmit, receive, decode tick) are synthesized with Tone.js and cost nothing.
 
@@ -136,12 +154,12 @@ Each sample was checked on a spectrogram (`scratchpad/A-sheet.jpg`); raven-5 and
 | TP-02 | Field jacket / lab coat with chest mark | gpt_image_2_5 high/2k, logo refs | 2.75 | ✅ `TP-02.webp`. Forest-green technical shell with a chest mark and a lime collar tab. |
 | TP-03 | Hydrophone buoy livery at sea (can reuse the K5 buoy) | gpt_image_2_5 high/2k, logo refs + K5 | 2.75 | ✅ `TP-03.webp`. The K5 buoy with the Morsis logo and FIELD STATION 07 on its hull, humpback below. |
 | TP-04 | Field-station ID badge on a lanyard | gpt_image_2_5 high/2k, logo refs | 2.75 | ✅ `TP-04.webp`. Badge: FIELD STATION 07 — BIOACOUSTICS, spectrogram, MRS-0716, lime-striped lanyard. |
-| TP-05 | Field Console app icon (1024 px) | **Claude SVG**, Higgsfield render optional | 0 | ⬜ |
-| TP-06 | Social post: "Decoded today", spectrogram plus quote card | **Claude HTML/SVG** composited over a FIELD still | 0 | ⬜ |
-| OG-01 | Open Graph share image 1200×630 | Claude composite | 0 | ⬜ |
-| H-01 (Tier 2) | Hero loop: slow drift above the cloud sea, ravens crossing (start = end frame K1) | `seedance_2_5 --mode omni_reference --resolution 720p --duration 5` | 35 | ⬜ |
-| P-* (Tier 2) | Six habitat cards for zone panels (otherwise cropped from keyframes) | test winner | 2 each | ⬜ |
+| TP-05 | Field Console app icon (1024 px) | **Claude SVG** | 0 | ✅ `img/touchpoints/TP-05.svg` + `.png` (1024): the lime mark on a forest-to-abyss radial gradient with a faint oscilloscope grid and a baseline rule. |
+| TP-06 | Social post: "Decoded today", spectrogram plus quote card | **Claude SVG** composited over K6 | 0 | ✅ `img/touchpoints/TP-06.webp` (1080×1350): DECODED TODAY · Field station 07 · dolphin D-14, the real spectrogram of `audio/dolphin/2`, the Decoded reply, Confidence 0.71 and a cited Field note (Janik & Sayigh 2013). |
+| OG-01 | Open Graph share image 1200×630 | Claude composite over K1 | 0 | ✅ `img/og/OG-01.jpg` (1200×630): the logo, the tagline in Instrument Serif and the personality line in Geist Mono. |
+| H-01 (Tier 2) | Hero loop: slow drift above the cloud sea, ravens crossing (start = end frame K1) | `seedance_2_5 --mode omni_reference --resolution 1080p --duration 5` (1080p for quality) | 80 | ✅ `video/H-01.mp4` (109 frames, 4.54 s, 0.7 MB) + `img/posters/hero.webp`. The raw clip's end frame drifted (seam PSNR 24.6), so the last 0.5 s is crossfaded into the head, giving a seamless loop (41.5 dB). Slow drift above the cloud sea, two ravens gliding. |
+| P-* (Tier 2) | Six habitat cards for zone panels (otherwise cropped from keyframes) | gpt_image_2_5 high/2k, zone keyframe as grade ref | 2.75 each | ✅ `img/habitats/P-{raven,starling,elephant,prairie,humpback,dolphin}.webp`: a raven pair calling on a ridge above the cloud sea, a starling on a branch with a murmuration behind, matriarch and calf, a prairie dog greeting 'kiss', a humpback in god-rays, two dolphins. |
 
 ## Regenerate in Higgsfield (filled in when credits run out)
 
-_Nothing yet._ When a 🔁 asset is made, add a row here: ID, what the Claude stand-in is, the exact Higgsfield command to run, and its estimated credits.
+_Nothing._ No 🔁 stand-ins were needed after the trial ended. Optional re-roll candidates if there's time: **B-sea** (`mirelo_text_to_audio --duration 22`, 5.5; the source has two level steps) and **A-dolphin-1** (`seed_audio`, about 1.8; a steady whistle with little frequency sweep). When a 🔁 asset is made, add a row here: ID, what the Claude stand-in is, the exact Higgsfield command to run, and its estimated credits.

@@ -9,11 +9,12 @@ import { $, $$, actProgress, clamp } from "./dom";
 import { openInspector } from "./atlas";
 
 // Film timeline in seconds (public/assets/video/manifest.json). Zone changes sit
-// where the picture actually changes medium: the savanna arrives mid-D2, and D4
-// cuts from the prairie to the waterline at ~18.5 s.
+// where the picture actually changes medium: the savanna arrives at ~7.8 s, the
+// buoy at the waterline at ~17.6 s, and the camera goes under at ~19 s.
 let DUR = 25.042;
-const SKY_END = 7.5;
-const SEA_START = 18.5;
+const SKY_END = 7.8;
+const SEA_START = 17.6;
+const UNDER = 19;
 const DEPTH_END = 24.6;
 const FRAME_ASPECT = 16 / 9;
 
@@ -96,8 +97,8 @@ export function initDescent() {
       medium.textContent = "Soil · seismic";
       speed.textContent = "≈ 250 m/s";
     } else {
-      const d = 40 * clamp((t - SEA_START) / (DEPTH_END - SEA_START), 0, 1);
-      alt.textContent = d < 0.5 ? "Waterline" : `−${Math.round(d)} m`;
+      const d = 40 * clamp((t - UNDER) / (DEPTH_END - UNDER), 0, 1);
+      alt.textContent = t < UNDER ? "Waterline" : `−${Math.max(1, Math.round(d))} m`;
       medium.textContent = "Seawater";
       speed.textContent = "1,480 m/s";
     }

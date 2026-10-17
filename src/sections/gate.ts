@@ -1,10 +1,10 @@
 // Calibration gate: preloads the first frames and field recordings, then
 // unlocks audio inside the visitor's click (browsers require a gesture).
-import { loadAmbience, loadBank, unlock } from "../audio/engine";
+import { loadAmbience, loadBank, loadScore, startScore, unlock } from "../audio/engine";
 import { ORDER } from "../decode/species";
 import { $ } from "./dom";
 
-const PRELOAD_IMAGES = ["/assets/img/posters/descent.webp", "/assets/img/keyframes/K1.webp", "/assets/img/posters/ft1.webp"];
+const PRELOAD_IMAGES = ["/assets/img/posters/hero.webp", "/assets/img/posters/descent.webp", "/assets/img/posters/ft1.webp"];
 
 export function initGate() {
   const gate = $("#gate");
@@ -29,7 +29,7 @@ export function initGate() {
   });
   // Decoded audio needs an AudioContext, which exists before the gesture in a
   // suspended state; decoding is allowed, playback is not.
-  const audioReady = Promise.all([...ORDER.map((k) => loadBank(k)), loadAmbience()])
+  const audioReady = Promise.all([...ORDER.map((k) => loadBank(k)), loadAmbience(), loadScore()])
     .catch(() => undefined)
     .then(() => tick("Field recordings ready"));
 
@@ -40,7 +40,10 @@ export function initGate() {
     gate.classList.add("is-done");
     document.documentElement.style.overflow = "";
     document.dispatchEvent(new CustomEvent("morsis:enter", { detail: { withSound } }));
-    audioReady.then(() => document.dispatchEvent(new CustomEvent("morsis:audio")));
+    audioReady.then(() => {
+      startScore();
+      document.dispatchEvent(new CustomEvent("morsis:audio"));
+    });
     setTimeout(() => gate.remove(), 700);
   };
   btnSound.addEventListener("click", () => enter(true));

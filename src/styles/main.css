@@ -161,8 +161,10 @@ img[data-optional].is-missing { visibility: hidden; }
 .rail__lead .display { font-size: var(--sc-t-2xl); }
 .specimen { width: clamp(16rem, 24vw, 21rem); display: flex; flex-direction: column; }
 .specimen__media { position: relative; aspect-ratio: 4 / 5; border-radius: var(--sc-r-lg); overflow: hidden; background: radial-gradient(70% 60% at 50% 40%, #2C3A27, #121C10); box-shadow: var(--sc-edge), var(--sc-e2); }
-.specimen__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms var(--sc-ease-out); }
-.specimen:hover .specimen__media img { transform: scale(1.03); }
+.specimen__media img, .specimen__loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 600ms var(--sc-ease-out), opacity 600ms var(--sc-ease-out); }
+.specimen__loop { opacity: 0; }
+.specimen__loop.is-playing { opacity: 1; }
+.specimen:hover .specimen__media :is(img, .specimen__loop) { transform: scale(1.03); }
 .specimen__zone { position: absolute; top: var(--sc-3); left: var(--sc-3); }
 .specimen__ph { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--sc-font-display); font-size: 3.4rem; color: color-mix(in oklab, var(--sc-ink) 22%, transparent); }
 .specimen h3 { font-family: var(--sc-font-display); font-weight: 400; font-size: var(--sc-t-xl); margin: var(--sc-4) 0 0; letter-spacing: -0.01em; }
@@ -284,7 +286,8 @@ img[data-optional].is-missing { visibility: hidden; }
 .inspector[open] { display: grid; grid-template-columns: 1.4fr 1fr; animation: insp-in 300ms var(--sc-ease-out); }
 @keyframes insp-in { from { opacity: 0; transform: scale(0.97); } }
 .inspector::backdrop { background: color-mix(in oklab, var(--abyss) 78%, transparent); backdrop-filter: blur(4px); }
-.inspector__view { position: relative; background: radial-gradient(70% 70% at 50% 45%, #22301D, #070B06); }
+/* The species' habitat sits behind the scan, graded down so the model reads first. */
+.inspector__view { position: relative; background: linear-gradient(color-mix(in oklab, var(--abyss) 62%, transparent), color-mix(in oklab, var(--abyss) 78%, transparent)), var(--habitat, none) center / cover no-repeat, radial-gradient(70% 70% at 50% 45%, #22301D, #070B06); }
 .inspector__view canvas, .inspector__view img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .inspector__view canvas { cursor: grab; touch-action: none; }
 .inspector__view canvas:active { cursor: grabbing; }

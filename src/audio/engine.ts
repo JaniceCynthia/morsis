@@ -18,6 +18,8 @@ let analyser: Tone.Analyser;
 let reverb: Tone.Reverb;
 let echo: Tone.FeedbackDelay;
 const ambience: Partial<Record<"sky" | "land" | "sea", Tone.Player>> = {};
+let score: Tone.Player | null = null;
+const SCORE_DB = -20;
 const banks: Partial<Record<SpeciesKey, Tone.ToneAudioBuffer[]>> = {};
 
 function graph() {
@@ -83,9 +85,22 @@ export async function loadAmbience() {
   );
 }
 
+/** The ambient score: a quiet bed under the whole page, ducked by zone ambience. */
+export async function loadScore() {
+  graph();
+  const buf = await loadBuffer("/assets/audio/score/m01");
+  if (!buf) return;
+  score = new Tone.Player({ url: buf, loop: true, fadeIn: 3 }).connect(master);
+  score.volume.value = SCORE_DB;
+}
+export function startScore() {
+  if (ready && score && score.state !== "started") score.start();
+}
+
 /** Weights 0..1 per zone; called every frame the descent is on screen. */
 export function mixAmbience(w: { sky: number; land: number; sea: number }) {
   if (!ready) return;
+  if (score) score.volume.rampTo(SCORE_DB - 12 * Math.min(1, w.sky + w.land + w.sea), 0.4);
   for (const z of ["sky", "land", "sea"] as const) {
     const p = ambience[z];
     if (!p) continue;

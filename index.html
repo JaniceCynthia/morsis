@@ -7,7 +7,8 @@
 <meta name="description" content="Morsis is a research lab translating human speech into signals animals can understand, and their signals back into ours.">
 <meta property="og:title" content="Morsis">
 <meta property="og:description" content="Serious science. Inherently wondrous. Open a channel to a raven, an elephant or a humpback whale.">
-<meta property="og:image" content="/assets/img/og.png">
+<meta property="og:image" content="/assets/img/og/OG-01.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#050A06">
 <link rel="icon" href="/assets/brand/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +16,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="/vendor/scrollcraft.css">
 <link rel="stylesheet" href="/src/styles/main.css">
-<link rel="preload" as="image" href="/assets/img/posters/descent.webp">
+<link rel="preload" as="image" href="/assets/img/posters/hero.webp">
 </head>
 <body>
 
@@ -57,13 +58,13 @@
   <!-- HERO · flow + parallax layers. The bubble is the first thing to play with. -->
   <section class="hero" data-sc-act="flow" data-sc-drift="#050A06">
     <div class="hero__plate" data-sc-parallax="-0.12" aria-hidden="true">
-      <img src="/assets/img/keyframes/K1.webp" width="1920" height="1080" alt="" data-optional>
+      <img src="/assets/img/posters/hero.webp" width="1920" height="1080" alt="" data-optional>
       <video class="hero__loop" muted playsinline loop autoplay preload="none" data-optional-video="/assets/video/H-01.mp4"></video>
     </div>
     <canvas class="hero__field" id="field" aria-hidden="true"></canvas>
     <div class="hero__fade" aria-hidden="true"></div>
     <div class="hero__copy sc-wrap">
-      <h1 class="hero__title">The oldest conversation on<h1 class="hero__title">Understanding the oldest conversation on&nbsp;Earth.</h1>nbsp;Earth.</h1>
+      <h1 class="hero__title">The oldest conversation on&nbsp;Earth.</h1>
       <p class="hero__sub">Morsis is a research lab translating human speech into signals animals can understand, and their signals back into ours.</p>
       <div class="hero__actions">
         <a class="btn btn--accent" href="#channel" data-open-channel>Open a channel</a>
@@ -102,17 +103,17 @@
         <ol class="hud__route" aria-hidden="true"><li data-zone="sky">Sky</li><li data-zone="land">Land</li><li data-zone="sea">Sea</li><i id="hud-dot"></i></ol>
       </aside>
 
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.03 0.27">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0 0.28 0">
         <p class="label">Zone A · Sky</p>
         <h2 class="display">The air is full of syntax.</h2>
         <p class="body">Birds string calls together with rules. Ravens recruit allies to food with a dedicated yell. Starlings never stop learning new sounds.</p>
       </div>
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.34 0.71">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.27 0.69">
         <p class="label">Zone B · Land</p>
         <h2 class="display">Some messages travel through your feet.</h2>
         <p class="body">Elephant rumbles sit below human hearing and ripple through the ground for kilometres. Prairie dogs pack the colour, size and speed of an intruder into one alarm call.</p>
       </div>
-      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.74">
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.68">
         <p class="label">Zone C · Sea</p>
         <h2 class="display">Down here, sound travels four times faster.</h2>
         <p class="body">Water carries voices across ocean basins. Humpback songs spread between populations like culture. Dolphins answer to the whistle that works as their name.</p>
@@ -120,12 +121,12 @@
 
       <!-- Hotspots: data-t is a window in film seconds, data-path keyframes the animal's position in the 16:9 frame (see src/sections/descent.ts). -->
       <div class="hotspots">
-        <button class="spot" data-species="raven" data-t="0 2.9" data-path="0:0.45,0.48 1:0.51,0.49 1.8:0.64,0.5 2.6:0.84,0.51" type="button"><i></i><span>Raven</span></button>
-        <button class="spot" data-species="starling" data-t="3.4 7.6" data-path="3.4:0.47,0.34 7.6:0.47,0.34" type="button"><i></i><span>Starling</span></button>
-        <button class="spot" data-species="elephant" data-t="8.2 12.6" data-path="8.2:0.46,0.44 12.6:0.46,0.44" type="button"><i></i><span>Elephant</span></button>
-        <button class="spot" data-species="prairie" data-t="14.4 18.3" data-path="14.4:0.51,0.56 18.3:0.51,0.56" type="button"><i></i><span>Prairie dog</span></button>
-        <button class="spot" data-species="humpback" data-t="18.7 23" data-path="18.7:0.39,0.76 20:0.37,0.75 21.5:0.43,0.67 23:0.47,0.5" type="button"><i></i><span>Humpback</span></button>
-        <button class="spot" data-species="dolphin" data-t="23.2 25.1" data-path="23.2:0.45,0.86 24.2:0.47,0.7 25:0.52,0.66" type="button"><i></i><span>Dolphin</span></button>
+        <button class="spot" data-species="raven" data-t="0 2.8" data-path="0:0.42,0.49 1.2:0.44,0.47 2.2:0.47,0.38 2.8:0.48,0.36" type="button"><i></i><span>Raven</span></button>
+        <button class="spot" data-species="starling" data-t="3.6 7.6" data-path="3.6:0.53,0.42 5.2:0.51,0.41 6.2:0.46,0.32 7.4:0.3,0.2" type="button"><i></i><span>Starling</span></button>
+        <button class="spot" data-species="elephant" data-t="8 12.4" data-path="8:0.45,0.42 9.8:0.43,0.44 11:0.44,0.42 12.2:0.3,0.45" type="button"><i></i><span>Elephant</span></button>
+        <button class="spot" data-species="prairie" data-t="12.8 17.4" data-path="12.8:0.53,0.5 14.6:0.52,0.44 15.8:0.52,0.44 17:0.5,0.8" type="button"><i></i><span>Prairie dog</span></button>
+        <button class="spot" data-species="humpback" data-t="19 23.6" data-path="19:0.44,0.7 20.6:0.46,0.69 21.8:0.46,0.62 23:0.49,0.47 23.6:0.5,0.4" type="button"><i></i><span>Humpback</span></button>
+        <button class="spot" data-species="dolphin" data-t="23.4 25.1" data-path="23.4:0.48,0.84 24.2:0.5,0.67 25:0.52,0.63" type="button"><i></i><span>Dolphin</span></button>
       </div>
     </div>
   </section>
@@ -158,7 +159,7 @@
         <li data-sc-cue="0.2 0.4"><span class="mono">01 Listen</span><h3>Hydrophones and mic arrays</h3><p>Six-channel capture from 1 Hz to 150 kHz, so infrasonic rumbles and dolphin clicks land in the same recording, tagged with GPS, depth and time.</p></li>
         <li data-sc-cue="0.38 0.58"><span class="mono">02 Segment</span><h3>Find the units</h3><p>The DSP board splits the signal into units: clicks, whistles, moans, chirps. Boat, wind and surf noise is stripped out before anything is interpreted.</p></li>
         <li data-sc-cue="0.56 0.76"><span class="mono">03 Map meaning</span><h3>Align sound with context</h3><p>Decode-3 links each unit to what was happening: who was nearby, what they did next, where the food or the danger was. Meaning is inferred, never assumed.</p></li>
-        <li data-sc-cue="0.74"><span class="mono">04 Emit</span><h3>Answer in their signal</h3><p>Your sentence is composed from units the species already uses, then played back at the right band and level, only under research permits and welfare review.</p></li>
+        <li data-sc-cue="0.68"><span class="mono">04 Emit</span><h3>Answer in their signal</h3><p>Your sentence is composed from units the species already uses, then played back at the right band and level, only under research permits and welfare review.</p></li>
       </ol>
     </div>
   </section>

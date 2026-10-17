@@ -7,6 +7,13 @@ import { $, esc } from "./dom";
 
 const img = (k: SpeciesKey) => `/assets/img/specimens/S-${k}.webp`;
 const glb = (k: SpeciesKey) => `/assets/models/${k}.glb`;
+const habitat = (k: SpeciesKey) => `/assets/img/habitats/P-${k}.webp`;
+/** Hero species have a seamless 5 s field loop. */
+const LOOPS: Partial<Record<SpeciesKey, string>> = {
+  raven: "/assets/video/L-raven.mp4",
+  elephant: "/assets/video/L-elephant.mp4",
+  humpback: "/assets/video/L-humpback.mp4",
+};
 
 export function renderAtlas() {
   const rail = $("#rail");
@@ -18,6 +25,7 @@ export function renderAtlas() {
         <div class="specimen__media" data-sc-tilt="5">
           <span class="specimen__ph" aria-hidden="true">${esc(s.short[0])}</span>
           <img src="${img(k)}" width="800" height="1000" alt="${esc(s.name)}, full body" loading="lazy" data-optional>
+          ${LOOPS[k] ? `<video class="specimen__loop" muted loop playsinline preload="none" data-src="${LOOPS[k]}" aria-hidden="true"></video>` : ""}
           <span class="label specimen__zone">${s.zone}</span>
         </div>
         <h3>${esc(s.name)}</h3>
@@ -40,6 +48,18 @@ export function renderAtlas() {
   rail.querySelectorAll<HTMLImageElement>("img[data-optional]").forEach((i) =>
     i.addEventListener("load", () => i.previousElementSibling?.remove(), { once: true }),
   );
+  // Field loops play only while their card is on screen; the still holds otherwise.
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const v = e.target as HTMLVideoElement;
+      if (e.isIntersecting) {
+        if (!v.src) v.src = v.dataset.src!;
+        v.play().then(() => v.classList.add("is-playing")).catch(() => undefined);
+      } else v.pause();
+    }
+  }, { threshold: 0.35 });
+  rail.querySelectorAll<HTMLVideoElement>(".specimen__loop").forEach((v) => io.observe(v));
 }
 
 function sample(k: SpeciesKey) {
@@ -77,6 +97,7 @@ export async function openInspector(k: SpeciesKey) {
   $("#insp-traits").innerHTML = s.traits.map((t) => `<li>${esc(t)}</li>`).join("");
   const still = $<HTMLImageElement>("#insp-img");
   const cv = $<HTMLCanvasElement>("#insp-gl");
+  $(".inspector__view").style.setProperty("--habitat", `url("${habitat(k)}")`);
   dlg.showModal();
 
   const has3d = await exists(glb(k));

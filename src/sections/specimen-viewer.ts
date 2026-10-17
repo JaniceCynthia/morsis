@@ -33,7 +33,7 @@ export function createViewer(canvas: HTMLCanvasElement): Viewer {
   controls.maxDistance = 8;
   controls.enablePan = false;
 
-  const draco = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
+  const draco = new DRACOLoader().setDecoderPath("/vendor/draco/");
   const loader = new GLTFLoader().setDRACOLoader(draco);
   const cache = new Map<string, THREE.Object3D>();
   let model: THREE.Object3D | null = null;
