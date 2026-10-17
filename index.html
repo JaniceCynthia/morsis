@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morsis · Understanding the oldest conversation on Earth</title>
+<meta name="description" content="Morsis is a research lab translating human speech into signals animals can understand, and their signals back into ours.">
+<meta property="og:title" content="Morsis">
+<meta property="og:description" content="Serious science. Inherently wondrous. Open a channel to a raven, an elephant or a humpback whale.">
+<meta property="og:image" content="/assets/img/og.png">
+<meta name="theme-color" content="#050A06">
+<link rel="icon" href="/assets/brand/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/vendor/scrollcraft.css">
+<link rel="stylesheet" href="/src/styles/main.css">
+<link rel="preload" as="image" href="/assets/img/posters/descent.webp">
+</head>
+<body>
+
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
+
+<!-- Calibration gate: preloads the descent and unlocks audio inside a gesture. -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate__inner">
+    <p class="mark mark--gate"><img src="/assets/brand/logo-dark.svg" alt="" data-logo><span class="mark__text">Morsis</span></p>
+    <h2 id="gate-title" class="gate__title">Calibrating FT-1</h2>
+    <div class="gate__meter" aria-hidden="true"><i id="gate-bar"></i></div>
+    <p class="gate__status mono" id="gate-status" aria-live="polite">Loading field recordings</p>
+    <div class="gate__actions">
+      <button class="btn btn--accent" id="gate-sound" type="button">Begin with sound</button>
+      <button class="btn btn--ghost" id="gate-quiet" type="button">Continue muted</button>
+    </div>
+  </div>
+</div>
+
+<header class="site-bar" id="bar">
+  <a class="mark" href="#top" aria-label="Morsis, back to top"><img src="/assets/brand/logo-dark.svg" alt="" data-logo><span class="mark__text">Morsis</span></a>
+  <nav class="site-nav" aria-label="Sections">
+    <a href="#descent">The descent</a>
+    <a href="#specimens">Specimens</a>
+    <a href="#ft1">FT-1</a>
+    <a href="#evidence">Evidence</a>
+  </nav>
+  <div class="site-bar__end">
+    <button class="icon-btn" id="sound-toggle" type="button" aria-pressed="true" aria-label="Sound">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <a class="btn btn--accent btn--sm" href="#channel" data-open-channel>Open a channel</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO · flow + parallax layers. The bubble is the first thing to play with. -->
+  <section class="hero" data-sc-act="flow" data-sc-drift="#050A06">
+    <div class="hero__plate" data-sc-parallax="-0.12" aria-hidden="true">
+      <img src="/assets/img/keyframes/K1.webp" width="1920" height="1080" alt="" data-optional>
+      <video class="hero__loop" muted playsinline loop autoplay preload="none" data-optional-video="/assets/video/H-01.mp4"></video>
+    </div>
+    <canvas class="hero__field" id="field" aria-hidden="true"></canvas>
+    <div class="hero__fade" aria-hidden="true"></div>
+    <div class="hero__copy sc-wrap">
+      <h1 class="hero__title">The oldest conversation on<h1 class="hero__title">Understanding the oldest conversation on&nbsp;Earth.</h1>nbsp;Earth.</h1>
+      <p class="hero__sub">Morsis is a research lab translating human speech into signals animals can understand, and their signals back into ours.</p>
+      <div class="hero__actions">
+        <a class="btn btn--accent" href="#channel" data-open-channel>Open a channel</a>
+        <button class="bubble" id="bubble" type="button" aria-describedby="bubble-hint">
+          <span class="bubble__ring" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          <span>Hear the first exchange</span>
+        </button>
+      </div>
+      <p class="hero__transcript mono" id="bubble-hint" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- MANIFESTO · pin + kinetic. The frame holds; the argument assembles. -->
+  <section class="manifesto" data-sc-act="pin" data-sc-span="2.6" data-sc-drift="#0B140A">
+    <div data-sc-stage class="manifesto__stage">
+      <p class="manifesto__line" data-sc-cue="0 0.3 0" data-sc-kinetic="words">Every species already speaks.</p>
+      <p class="manifesto__line manifesto__line--small" data-sc-cue="0.24 0.58">Whales sing in structured songs. Elephants call each other by name. Prairie dogs describe the predator they see.</p>
+      <p class="manifesto__line" data-sc-cue="0.52 0.84" data-sc-kinetic="words">We build the models that sit between&nbsp;us.</p>
+      <p class="manifesto__line manifesto__line--sign" data-sc-cue="0.8">Serious science. <em>Inherently wondrous.</em></p>
+    </div>
+  </section>
+
+  <!-- THE DESCENT · scrub. The peak: one continuous camera move, sky to seabed. -->
+  <section id="descent" class="descent" data-sc-act="scrub" data-sc-span="7.5" data-sc-dwell="0.18" data-sc-drift="#050A06">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="/assets/img/posters/descent.webp" alt="" data-optional>
+      <video data-sc-scrub data-sc-src="/assets/video/descent.mp4" data-sc-src-mobile="/assets/video/descent-m.mp4" muted playsinline></video>
+      <div class="descent__fallback" aria-hidden="true"></div>
+      <div class="sc-scrim sc-scrim--lead" aria-hidden="true"></div>
+
+      <aside class="hud mono" aria-label="Field readout">
+        <div class="hud__row"><span>Altitude</span><b id="hud-alt">1,200 m</b></div>
+        <div class="hud__row"><span>Medium</span><b id="hud-medium">Air</b></div>
+        <div class="hud__row"><span>Sound speed</span><b id="hud-speed">343 m/s</b></div>
+        <ol class="hud__route" aria-hidden="true"><li data-zone="sky">Sky</li><li data-zone="land">Land</li><li data-zone="sea">Sea</li><i id="hud-dot"></i></ol>
+      </aside>
+
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.02 0.3">
+        <p class="label">Zone A · Sky</p>
+        <h2 class="display">The air is full of syntax.</h2>
+        <p class="body">Birds string calls together with rules. Ravens recruit allies to food with a dedicated yell. Starlings never stop learning new sounds.</p>
+      </div>
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.36 0.62">
+        <p class="label">Zone B · Land</p>
+        <h2 class="display">Some messages travel through your feet.</h2>
+        <p class="body">Elephant rumbles sit below human hearing and ripple through the ground for kilometres. Prairie dogs pack the colour, size and speed of an intruder into one alarm call.</p>
+      </div>
+      <div class="sc-copy sc-copy--lead descent__copy" data-sc-cue="0.7 0.97">
+        <p class="label">Zone C · Sea</p>
+        <h2 class="display">Down here, sound travels four times faster.</h2>
+        <p class="body">Water carries voices across ocean basins. Humpback songs spread between populations like culture. Dolphins answer to the whistle that works as their name.</p>
+      </div>
+
+      <!-- Hotspots: positions are tuned against the final clip (see src/sections/descent.ts). -->
+      <div class="hotspots">
+        <button class="spot" data-species="raven" data-window="0.03 0.16" style="--x:64%;--y:38%" type="button"><i></i><span>Raven</span></button>
+        <button class="spot" data-species="starling" data-window="0.17 0.32" style="--x:70%;--y:30%" type="button"><i></i><span>Starling</span></button>
+        <button class="spot" data-species="elephant" data-window="0.37 0.52" style="--x:62%;--y:58%" type="button"><i></i><span>Elephant</span></button>
+        <button class="spot" data-species="prairie" data-window="0.53 0.66" style="--x:58%;--y:66%" type="button"><i></i><span>Prairie dog</span></button>
+        <button class="spot" data-species="humpback" data-window="0.72 0.86" style="--x:66%;--y:56%" type="button"><i></i><span>Humpback</span></button>
+        <button class="spot" data-species="dolphin" data-window="0.86 0.99" style="--x:60%;--y:44%" type="button"><i></i><span>Dolphin</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECIMEN ATLAS · pan. Lateral travel reads as range. -->
+  <section id="specimens" class="atlas" data-sc-act="pan" data-sc-span="3.4" data-sc-drift="#0E1A0C">
+    <div data-sc-stage>
+      <div class="rail" data-sc-pan="0.08" id="rail">
+        <div class="rail__lead">
+          <h2 class="display">Six voices in active study.</h2>
+          <p class="body">Every specimen is built from field measurements, then tuned by ear. Inspect one in 3D, hear its signal, then open a channel.</p>
+        </div>
+        <!-- items rendered from src/decode/species.ts -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FT-1 · scrub. The instrument comes apart one layer at a time. -->
+  <section id="ft1" class="ft1" data-sc-act="scrub" data-sc-span="4" data-sc-dwell="0.24" data-sc-drift="#070807">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="/assets/img/posters/ft1.webp" alt="" data-optional>
+      <video data-sc-scrub data-sc-src="/assets/video/ft1.mp4" data-sc-src-mobile="/assets/video/ft1-m.mp4" muted playsinline></video>
+      <div class="ft1__fallback" aria-hidden="true"></div>
+      <div class="sc-scrim sc-scrim--trail" aria-hidden="true"></div>
+      <div class="sc-copy sc-copy--trail ft1__intro" data-sc-cue="0 0.2 0">
+        <h2 class="display">Inside the FT-1 field transmitter.</h2>
+        <p class="body">Four layers turn a sentence into a signal an animal can parse, and a call back into words.</p>
+      </div>
+      <ol class="layers">
+        <li data-sc-cue="0.2 0.4"><span class="mono">01 Listen</span><h3>Hydrophones and mic arrays</h3><p>Six-channel capture from 1 Hz to 150 kHz, so infrasonic rumbles and dolphin clicks land in the same recording, tagged with GPS, depth and time.</p></li>
+        <li data-sc-cue="0.38 0.58"><span class="mono">02 Segment</span><h3>Find the units</h3><p>The DSP board splits the signal into units: clicks, whistles, moans, chirps. Boat, wind and surf noise is stripped out before anything is interpreted.</p></li>
+        <li data-sc-cue="0.56 0.76"><span class="mono">03 Map meaning</span><h3>Align sound with context</h3><p>Decode-3 links each unit to what was happening: who was nearby, what they did next, where the food or the danger was. Meaning is inferred, never assumed.</p></li>
+        <li data-sc-cue="0.74"><span class="mono">04 Emit</span><h3>Answer in their signal</h3><p>Your sentence is composed from units the species already uses, then played back at the right band and level, only under research permits and welfare review.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONSOLE · flow + pointer. The page stops moving and starts answering. -->
+  <section id="channel" class="console-sec sc-section" data-sc-act="flow" data-sc-drift="#0B140A">
+    <div class="sc-wrap">
+      <div class="console-head">
+        <h2 class="display">Say something. Something answers.</h2>
+        <p class="body">Pick a species, type a sentence, transmit. Your words are encoded into that species’ own call units. Decode-3 translates the reply, with a confidence score and the field note behind it.</p>
+      </div>
+
+      <div class="console" id="console">
+        <div class="console__tabs" role="tablist" aria-label="Console mode">
+          <button role="tab" id="tab-channel" aria-selected="true" aria-controls="panel-channel" type="button">Open a channel</button>
+          <button role="tab" id="tab-eaves" aria-selected="false" aria-controls="panel-eaves" type="button" tabindex="-1">Eavesdrop</button>
+          <span class="console__led mono" id="led" data-state="idle"><i></i><span>Decode-3 standing by</span></span>
+        </div>
+
+        <div class="console__body">
+          <div class="console__side">
+            <div role="tabpanel" id="panel-channel" aria-labelledby="tab-channel">
+              <p class="label">Channel</p>
+              <div class="species-pick" id="species-pick" role="radiogroup" aria-label="Species"></div>
+              <p class="label">Try</p>
+              <div class="chips" id="chips"></div>
+            </div>
+            <div role="tabpanel" id="panel-eaves" aria-labelledby="tab-eaves" hidden>
+              <p class="label">Intercept</p>
+              <div class="pair-pick" id="pair-pick" role="radiogroup" aria-label="Exchange"></div>
+              <p class="label">Steer it toward</p>
+              <div class="chips" id="topics"></div>
+            </div>
+            <div class="readout mono">
+              <div><span>Band</span><b id="ro-band">–</b></div>
+              <div><span>Shift</span><b id="ro-shift">0 oct</b></div>
+              <label class="shift"><span>Hearing shift</span><input type="range" id="shift" min="-4" max="4" step="1" value="0" aria-describedby="shift-hint"></label>
+              <p class="hint" id="shift-hint">Elephant rumbles are too low for human ears. Move any call up or down by octaves.</p>
+            </div>
+          </div>
+
+          <div class="console__main">
+            <canvas class="spectro" id="spectro" aria-label="Live spectrogram of the signal" role="img"></canvas>
+            <ol class="log" id="log" aria-live="polite"></ol>
+            <form class="composer" id="composer" autocomplete="off">
+              <label class="sr-only" for="msg">Message</label>
+              <input id="msg" name="msg" maxlength="200" placeholder="Type to the humpback…" required>
+              <button class="btn btn--accent" id="transmit" type="submit">Transmit</button>
+            </form>
+          </div>
+        </div>
+        <p class="console__foot">FT-1 preview. Replies are generated live by Decode-3 from published behavioural research. Read them as hypotheses, not quotations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIELD KIT · reveal. The identity, out in the field. -->
+  <section class="kit sc-section" data-sc-act="flow" data-sc-drift="#10110D">
+    <div class="sc-wrap">
+      <div class="kit__head" data-sc-in>
+        <h2 class="display">Built for the field, not the shelf.</h2>
+        <a class="link" href="/brand.html">See the full identity</a>
+      </div>
+      <div class="kit__grid">
+        <figure class="kit__a" data-sc-reveal="up" data-sc-reveal-at="0.05 0.45"><img src="/assets/img/touchpoints/TP-01.webp" width="1600" height="1200" alt="The FT-1 hard-shell field case, graphite with a lime latch" data-optional><figcaption>FT-1 field case</figcaption></figure>
+        <figure class="kit__b" data-sc-reveal="left" data-sc-reveal-at="0.12 0.5"><img src="/assets/img/touchpoints/TP-03.webp" width="1600" height="1200" alt="A Morsis hydrophone buoy at sea" data-optional><figcaption>Hydrophone buoy, Field station 07</figcaption></figure>
+        <figure class="kit__c" data-sc-reveal="up" data-sc-reveal-at="0.2 0.58"><img src="/assets/img/touchpoints/TP-02.webp" width="1600" height="1200" alt="A Morsis field jacket with the chest mark" data-optional><figcaption>Field jacket</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE · flow. The only act that reads like a paper, which is the point. -->
+  <section id="evidence" class="evidence sc-section" data-sc-act="flow" data-sc-drift="#F1F1EA">
+    <div class="sc-wrap">
+      <div class="evidence__head" data-sc-in>
+        <h2 class="display">We didn’t invent animal language. We’re learning to read it.</h2>
+        <p class="body">Morsis builds on decades of peer-reviewed field research. These are some of the findings our models start from.</p>
+      </div>
+      <dl class="findings" data-sc-in data-sc-stagger="60">
+        <div><dt>Elephants call each other by name-like calls.</dt><dd>Wild African elephants responded more strongly to playbacks of calls originally addressed to them than to calls addressed to others.<cite>Pardo et al., Nature Ecology &amp; Evolution, 2024</cite></dd></div>
+        <div><dt>Sperm whale codas have a combinatorial structure.</dt><dd>Click patterns vary in rhythm, tempo and ornamentation, which combine into a far larger repertoire than once thought.<cite>Sharma et al., Nature Communications, 2024</cite></dd></div>
+        <div><dt>Prairie dog alarm calls describe the intruder.</dt><dd>Gunnison’s prairie dogs produce different calls for different predators, and even for the colour of a human’s clothing.<cite>Slobodchikoff et al., Animal Cognition, 2009</cite></dd></div>
+        <div><dt>Dolphins answer to their own name.</dt><dd>Bottlenose dolphins responded when they heard copies of their own signature whistle, and rarely to others.<cite>King &amp; Janik, PNAS, 2013</cite></dd></div>
+        <div><dt>In songbirds, call order changes meaning.</dt><dd>Japanese tits respond to an alert-then-recruit sequence, but not to the same calls played in reverse order.<cite>Suzuki et al., Nature Communications, 2016</cite></dd></div>
+        <div><dt>Humpback songs travel between populations.</dt><dd>New song types spread eastward across the South Pacific, from population to population, over a few years.<cite>Garland et al., Current Biology, 2011</cite></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- CLOSE · pin + pointer. Last element on the page. -->
+  <section class="close" data-sc-act="pin" data-sc-span="1.15" data-sc-drift="#050A06">
+    <div data-sc-stage class="close__stage" data-sc-spotlight>
+      <div class="close__inner">
+        <h2 class="close__title" data-sc-cue="0.06" data-sc-kinetic="words">The conversation is already happening. Join&nbsp;it.</h2>
+        <a class="btn btn--accent btn--lg" href="#channel" data-open-channel data-sc-magnet="0.24" data-sc-cue="0.06" data-sc-rise="0">Open a channel</a>
+      </div>
+      <footer class="foot">
+        <p class="mark"><img src="/assets/brand/logo-dark.svg" alt="" data-logo><span class="mark__text">Morsis</span></p>
+        <p>Interspecies Signal Lab. A research organisation. We don’t make collars, toys or pet apps.</p>
+        <p>All playback runs under research permits and animal-welfare review. We never transmit to animals in distress.</p>
+        <p><a class="link" href="mailto:lab@morsis.org">lab@morsis.org</a> · <a class="link" href="/brand.html">Identity</a></p>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<dialog class="inspector" id="inspector" aria-labelledby="insp-name">
+  <div class="inspector__view">
+    <canvas id="insp-gl" aria-label="3D specimen, drag to rotate" role="img"></canvas>
+    <img id="insp-img" alt="" hidden>
+    <p class="inspector__hint mono">Drag to rotate · scroll to zoom</p>
+  </div>
+  <div class="inspector__info">
+    <button class="icon-btn inspector__close" id="insp-close" type="button" aria-label="Close specimen">✕</button>
+    <p class="label" id="insp-zone"></p>
+    <h2 class="display" id="insp-name"></h2>
+    <p class="latin" id="insp-latin"></p>
+    <p class="body" id="insp-line"></p>
+    <ul class="traits" id="insp-traits"></ul>
+    <div class="inspector__actions">
+      <button class="btn btn--ghost" id="insp-play" type="button">Play signal sample</button>
+      <button class="btn btn--accent" id="insp-open" type="button">Open a channel</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="/vendor/scrollcraft.js"></script>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
