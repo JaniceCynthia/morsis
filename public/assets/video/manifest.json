@@ -1,0 +1,14 @@
+{
+  "descent": {
+    "segments": [
+      { "id": "D1", "start": 0, "end": 5.042, "from": "K1", "to": "K2" },
+      { "id": "D2", "start": 5.042, "end": 10.042, "from": "K2", "to": "K3" },
+      { "id": "D3", "start": 10.042, "end": 15.042, "from": "K3", "to": "K4" },
+      { "id": "D4", "start": 15.042, "end": 20.042, "from": "K4", "to": "K5" },
+      { "id": "D5", "start": 20.042, "end": 25.042, "from": "K5", "to": "K6" }
+    ],
+    "duration": 25.042,
+    "fps": 24
+  },
+  "ft1": { "duration": 10.042, "fps": 24 }
+}
