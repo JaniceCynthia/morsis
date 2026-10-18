@@ -120,16 +120,17 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 | Species | Reference S-* (SPECIMEN) | 3D M-* (Tier 2) | Loop L-* (Tier 2, hero species only) |
 |---|---|---|---|
 | Raven | S-raven ✅ 2.75 | M-raven ✅ 38 | L-raven ✅ 8.75 |
-| Starling | S-starling ✅ 2.75 | M-starling ✅ 38 | — |
+| Starling | S-starling ✅ 2.75 | M-starling ✅ 38 | L-starling ✅ (2026-10-18) |
 | Elephant | S-elephant ✅ 2.75 | M-elephant ✅ 38 | L-elephant ✅ 8.75 |
-| Prairie dog | S-prairie ✅ 2.75 | M-prairie ✅ 38 | — |
+| Prairie dog | S-prairie ✅ 2.75 | M-prairie ✅ 38 | L-prairie ✅ (2026-10-18) |
 | Humpback whale | S-humpback ✅ 2.75 | M-humpback ✅ 38 | L-humpback ✅ 8.75 |
-| Bottlenose dolphin | S-dolphin ✅ 2.75 | M-dolphin ✅ 38 | — |
+| Bottlenose dolphin | S-dolphin ✅ 2.75 | M-dolphin ✅ 38 | L-dolphin ✅ (2026-10-18) |
 
 - **S-\***: `img/specimens/S-<species>.webp`, made with gpt_image_2_5 high/2k at 1:1 (S-raven is T-02's winner). All six pass the gate.
 - **3D test (Tier 2):** raven on Meshy 7 (38) vs Tripo H3.1 detailed (18). **Meshy wins clearly** (crisp beak, feet and feathers; Tripo's head was blobby), so Meshy is used for all six.
 - **3D:** run `meshy_v7_image_to_3d` with the S-* image, `enable_pbr=true`, `target_polycount` about 30k, as GLB. Then compress with gltf-transform (Draco + WebP textures, under 3 MB each). **Tier 1 fallback:** the concept's procedural three.js animals. Any bad output is replaced with a CC-BY Sketchfab model, credited in the footer.
 - **3D output:** `models/<species>.glb`, each about 30k tris, Draco geometry plus WebP textures (≤1536 px, PBR: base colour, metallic-roughness, normal), 0.7–2.3 MB. The longest axis is about 1.9 units and the origin is **not** centred, so recentre with a Box3 in the viewer. The `gltf-transform optimize --texture-compress webp` step crashes on these textures (a sharp/libvips colourspace bug), so textures are re-encoded with PIL in `scratchpad/tools/tex.mjs`, then `gltf-transform draco` is applied. Geometry is not simplified.
+- **Cards (2026-10-18):** every specimen card now shows its habitat plate (`img/cards/C-<species>.webp`, 1280 px) and plays its loop while on screen; L-starling, L-prairie and L-dolphin were added the same way as the first three.
 - **Loops:** Kling 3.0 Pro with the same image as start and end frame so they loop seamlessly. They appear in the Specimen atlas header and the zone panels. **Done:** `video/L-{raven,elephant,humpback}.mp4`, made from the P-* habitat cards (start = end), 1920×1080, 120 frames at 24 fps (the duplicate closing frame is dropped), H.264 with faststart and no audio, 0.8–1.8 MB. The seams are near-identical (PSNR 38–43 dB), so play them with `loop muted playsinline`. Motion is subtle: the raven calls, the elephants sway, the whale glides.
 
 ## Audio (Tier 1). See [ADR 0001](adr/0001-animal-voices-from-sample-banks.md)
@@ -138,7 +139,7 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 |---|---|---|---|---|
 | A-raven-1…5 | Dry close calls: knock, kraa, rattle, recruitment yell, soft contact (5 regenerated) | Seed Audio 1.0 (`--format wav --sample_rate 48000`); Mirelo tested and rejected (mostly noise) | ~1.3–1.8 each | ✅ |
 | A-starling-1…5 | Whistles, clicks, warble, mimic fragment, chatter | same | | ✅ |
-| A-elephant-1…5 | Rumble (recorded audible), trumpet, contact rumble, roar, ear-flap/breath | same | | ✅ |
+| A-elephant-1…5 | **Regenerated 2026-10-18** (the first bank was broadband noise with no harmonics, and one take carried a steady high whine): contact rumble, trumpet, two-part greeting rumble, trumpet falling into a rumble, matriarch rumble. All five show clear harmonic stacks on a spectrogram. | Seed Audio 1.0, 7 takes for 5 keepers | ~1.5 each | ✅ Played by playback rate, not granular detune, and no longer re-shifted by the elephant's default Hearing shift (the samples are already audible). |
 | A-prairie-1…5 | Short alarm chirps at varied pitch, jump-yip, chatter | same | | ✅ |
 | A-humpback-1…5 | Moan, upsweep, grunt, cry, song phrase fragment | same | | ✅ (3 regenerated) |
 | A-dolphin-1…5 | Signature whistle up, down, warble, click train, burst pulse | same | | ✅ (1 and 5 regenerated; 1 is a steady tonal whistle with little sweep) |

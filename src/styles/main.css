@@ -239,6 +239,12 @@ img[data-optional].is-missing { visibility: hidden; }
 .ft1.no-gl .ft1__poster { opacity: 1; }
 .ft1__gl { position: absolute; inset: calc(var(--bar-h) + 6vh) 0 0; z-index: 1; width: 100%; height: calc(100% - var(--bar-h) - 6vh); display: block; opacity: 0; transition: opacity 700ms var(--sc-ease-out); }
 .ft1.has-gl .ft1__gl { opacity: 1; }
+/* Drag to turn the instrument; vertical swipes still scroll the page on touch. */
+.ft1__gl { cursor: grab; touch-action: pan-y; }
+.ft1__gl.is-dragging { cursor: grabbing; }
+.ft1__hint { position: absolute; z-index: 2; left: var(--sc-gutter); bottom: var(--sc-5); margin: 0; display: inline-flex; align-items: center; gap: var(--sc-2); font: 400 0.6875rem / 1 var(--sc-font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sc-ink-soft); opacity: 0; transition: opacity 500ms var(--sc-ease-out); pointer-events: none; }
+.ft1.has-gl .ft1__hint { opacity: 1; }
+.ft1.was-dragged .ft1__hint { opacity: 0.35; }
 .ft1__tags { position: absolute; inset: calc(var(--bar-h) + 6vh) 0 0; z-index: 2; pointer-events: none; overflow: hidden; }
 .ft1-tag { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: var(--sc-2); opacity: 0; will-change: transform, opacity; }
 .ft1-tag i { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px color-mix(in oklab, var(--lime) 22%, transparent); flex: none; }
@@ -258,6 +264,7 @@ img[data-optional].is-missing { visibility: hidden; }
 .layers h3 { font-family: var(--sc-font-display); font-weight: 400; font-size: var(--sc-t-xl); line-height: 1.05; margin: var(--sc-2) 0 0; letter-spacing: -0.02em; }
 .layers p { font-size: var(--sc-t-sm); line-height: 1.55; color: var(--sc-ink-soft); margin: var(--sc-2) 0 0; }
 @media (max-width: 860px) {
+  .ft1__hint { top: calc(var(--bar-h) + var(--sc-3)); bottom: auto; }
   .layers { top: auto; bottom: var(--sc-5); left: var(--sc-gutter); width: auto; }
   .layers li { inset: auto 0 0 0; }
   .ft1-tag span { font-size: 0.625rem; }

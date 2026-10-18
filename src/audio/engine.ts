@@ -4,7 +4,7 @@
 // Voiceprint applied last. Works with an empty bank (synth only) so the page
 // sounds right before the generated samples land.
 import * as Tone from "tone";
-import type { SpeciesKey } from "../decode/species";
+import { SPECIES, type SpeciesKey } from "../decode/species";
 import type { Mood, Signal } from "../decode/types";
 import { RECIPES, type Recipe } from "./recipes";
 
@@ -151,7 +151,7 @@ export interface SpeakOpts {
   print?: number;
   /** The researcher's message, encoded by the FT-1: synthetic, no samples. */
   human?: boolean;
-  /** Hearing shift in octaves. */
+  /** Hearing shift in octaves. Defaults to the species' own, as the Console does. */
   shift?: number;
 }
 
@@ -164,8 +164,14 @@ export function speak(k: SpeciesKey, sig: Pick<Signal, "units" | "contour" | "du
   const vp = voiceprint(o.print ?? hash(k));
   const mood = MOOD[sig.mood] || MOOD.curious;
   const r = rng(hash(`${k}|${sig.decoded || ""}|${o.print ?? 0}|${sig.units}`));
-  const shift = o.shift ?? 0;
-  const units = Math.max(1, Math.min(12, Math.round(sig.units)));
+  const shift = o.shift ?? SPECIES[k].shift;
+  // The sample banks are recordings already in human hearing range (an
+  // elephant rumble recorded audible), so a species' default Hearing shift
+  // must not move them again: the dial moves samples only relative to it.
+  // Only the synthesized layer, pitched at the true fundamental, needs the shift.
+  const natural = SPECIES[k].shift * 12;
+  // A rumble is one long call; cut into many units it stops sounding like one.
+  const units = Math.max(1, Math.min(R.style === "rumble" ? 2 : 12, Math.round(sig.units)));
   const total = Math.min(MAX_TOTAL, Math.max(R.minTotal, sig.durationSec)) * mood.tempo;
   const unitDur = (total / units) * (1 - R.gapRatio);
   const gap = (total / units) * R.gapRatio;
@@ -186,7 +192,7 @@ export function speak(k: SpeciesKey, sig: Pick<Signal, "units" | "contour" | "du
     const d = unitDur * (0.8 + r() * 0.4);
     const semis = semisBase + (c - 0.5) * R.rangeSemis;
     const semis2 = semisBase + (c2 - 0.5) * R.rangeSemis;
-    if (bank.length) grain(bank[Math.floor(r() * bank.length)], t, d, semis, semis2, r, lp, R);
+    if (bank.length) grain(bank[Math.floor(r() * bank.length)], t, d, semis - natural, semis2 - natural, r, lp, R);
     synth(R, t, d, semis, semis2, vp, lp, bank.length ? R.layer : 1, o.human, r);
     t += d + gap * (0.7 + r() * 0.6);
   }

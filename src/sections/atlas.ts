@@ -8,22 +8,20 @@ import { $, esc } from "./dom";
 const img = (k: SpeciesKey) => `/assets/img/specimens/S-${k}.webp`;
 const glb = (k: SpeciesKey) => `/assets/models/${k}.glb`;
 const habitat = (k: SpeciesKey) => `/assets/img/habitats/P-${k}.webp`;
-/** Hero species have a seamless 5 s field loop. */
-const LOOPS: Partial<Record<SpeciesKey, string>> = {
-  raven: "/assets/video/L-raven.mp4",
-  elephant: "/assets/video/L-elephant.mp4",
-  humpback: "/assets/video/L-humpback.mp4",
-};
+/** Every card plays a seamless 5 s field loop, made from its habitat plate (first
+ *  frame = last frame), so the card still is that plate at card size. */
+const still = (k: SpeciesKey) => `/assets/img/cards/C-${k}.webp`;
+const loop = (k: SpeciesKey) => `/assets/video/L-${k}.mp4`;
 
 /** Card dressing: one trait chip, and the tint the photo blurs into behind the
  *  text, picked from what is at the bottom of each card's still or field loop. */
 const CARD: Record<SpeciesKey, { chip: string; tint: string }> = {
-  raven: { chip: "Recruitment calls", tint: "#27303B" },
-  starling: { chip: "Mimicry", tint: "#34352F" },
-  elephant: { chip: "Infrasound", tint: "#3B3324" },
-  prairie: { chip: "Descriptive alarms", tint: "#3A3428" },
+  raven: { chip: "Recruitment calls", tint: "#1E2730" },
+  starling: { chip: "Mimicry", tint: "#232E33" },
+  elephant: { chip: "Infrasound", tint: "#3B2D22" },
+  prairie: { chip: "Descriptive alarms", tint: "#3A3228" },
   humpback: { chip: "Song", tint: "#0F2430" },
-  dolphin: { chip: "Signature whistle", tint: "#1E2A31" },
+  dolphin: { chip: "Signature whistle", tint: "#0F2532" },
 };
 
 export function renderAtlas() {
@@ -37,8 +35,8 @@ export function renderAtlas() {
         <div class="specimen__card" data-sc-tilt="4">
           <div class="specimen__media">
             <span class="specimen__ph" aria-hidden="true">${esc(s.short[0])}</span>
-            <img src="${img(k)}" width="800" height="1000" alt="${esc(s.name)}, full body" loading="lazy" data-optional>
-            ${LOOPS[k] ? `<video class="specimen__loop" muted loop playsinline preload="none" data-src="${LOOPS[k]}" aria-hidden="true"></video>` : ""}
+            <img src="${still(k)}" width="1280" height="724" alt="${esc(s.name)} in its habitat" loading="lazy" data-optional>
+            <video class="specimen__loop" muted loop playsinline preload="none" data-src="${loop(k)}" aria-hidden="true"></video>
           </div>
           <button class="specimen__hear" type="button" data-hear="${k}" aria-label="Hear the ${esc(s.short)}">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
