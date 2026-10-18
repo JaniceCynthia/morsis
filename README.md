@@ -48,11 +48,11 @@ Then set `GEMINI_API_KEY` in `.env.local`. The key is read only on the server an
 ## What's on the page
 
 1. **Calibration gate:** loads the first frames and sound banks, then unlocks audio.
-2. **Hero:** tap the bubble to hear a raven-to-raven exchange.
+2. **Hero:** a Lab Paper plaster wall. A carving of ravens, a starling murmuration and clouds rises wherever the pointer passes, holds, then sinks back (a ghost pointer drifts on touch screens). Tap the bubble to hear a raven-to-raven exchange.
 3. **Manifesto:** the lab's three claims.
 4. **The descent:** a scroll-scrubbed camera move through Sky, Land and Sea, with a live altitude, medium and speed-of-sound readout. Hotspots on the animals open the atlas.
 5. **Specimen atlas:** six species. **Inspect in 3D** opens a GLB viewer (drag to rotate, scroll to zoom), and **Hear it** plays a signal sample.
-6. **FT-1 teardown:** scrolling scrubs the field transmitter from assembled to exploded.
+6. **FT-1 teardown:** a real-time 3D model of the field transmitter. Scrolling opens it one Layer at a time (Listen, Segment, Map meaning, Emit) and names each part. See [ADR 0003](docs/adr/0003-ft1-as-realtime-exploded-model.md).
 7. **Console:** *Open a channel* (you and one animal) or *Eavesdrop* (two animals, and you can interject). Each reply comes with a spectrogram, a decoded English hypothesis, a confidence score and a cited field note.
 8. **Field kit:** the identity applied to real objects. Links to the [brand board](brand.html).
 9. **Evidence:** the published findings the lab builds on.
@@ -63,7 +63,8 @@ Then set `GEMINI_API_KEY` in `.env.local`. The key is read only on the server an
 index.html, brand.html     the two pages (multi-page Vite build)
 src/
   main.ts                  boot: mounts the scroll-craft engine and wires each section
-  sections/                one module per page section; specimen-viewer.ts is the three.js GLB viewer
+  sections/                one module per page section; specimen-viewer.ts is the three.js GLB viewer,
+                           ft1/ the FT-1 teardown, relief.ts the hero's WebGL plaster wall, stack.ts the section slide-over
   audio/                   Tone.js voice engine and per-species sound recipes
   decode/                  API client, species facts, scripted offline replies
   styles/main.css          page styles on top of the scroll-craft tokens
@@ -72,7 +73,7 @@ api/decode.ts              Vercel function wrapping server/decode.ts
 vite.config.ts             mounts server/decode.ts at /api/decode for dev and preview
 public/vendor/             scroll-craft engine (kept unmodified) and the Draco decoder
 public/assets/             images, video, audio banks, GLB models
-assets-src/                source renders the public assets were made from
+assets-src/                sources and scripts the public assets are built from (ft1/rebrand.py, brand/compose.py)
 experiments/               the original concept, kept as a fallback demo
 ```
 
@@ -91,3 +92,7 @@ The repo deploys to Vercel as is: Vite builds the static pages, and `api/decode.
 - [CONTEXT.md](CONTEXT.md): vocabulary (Channel, Eavesdrop, Voiceprint, Zone and others)
 - [docs/ASSETS.md](docs/ASSETS.md): every generated asset with its prompt and status
 - [docs/adr/](docs/adr/): architecture decisions
+
+## Credits
+
+The FT-1 shell is built on [“Grundig Radio FR-250”](https://sketchfab.com/3d-models/grundig-radio-fr-250-free-am-fm-sw-a8d7fe770fcf40ba8e257f5c73d2d55b) by [Gher](https://sketchfab.com/Gher), licensed [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/). Its third-party marks were painted out and replaced with Morsis decals (`assets-src/ft1/rebrand.py`); the internal parts are modelled in code. Typefaces: Neue Montreal and PP Editorial New (Pangram Pangram), supplied by the brand.

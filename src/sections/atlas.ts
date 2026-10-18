@@ -15,25 +15,43 @@ const LOOPS: Partial<Record<SpeciesKey, string>> = {
   humpback: "/assets/video/L-humpback.mp4",
 };
 
+/** Card dressing: one trait chip, and the tint the photo blurs into behind the
+ *  text, picked from what is at the bottom of each card's still or field loop. */
+const CARD: Record<SpeciesKey, { chip: string; tint: string }> = {
+  raven: { chip: "Recruitment calls", tint: "#27303B" },
+  starling: { chip: "Mimicry", tint: "#34352F" },
+  elephant: { chip: "Infrasound", tint: "#3B3324" },
+  prairie: { chip: "Descriptive alarms", tint: "#3A3428" },
+  humpback: { chip: "Song", tint: "#0F2430" },
+  dolphin: { chip: "Signature whistle", tint: "#1E2A31" },
+};
+
 export function renderAtlas() {
   const rail = $("#rail");
   rail.insertAdjacentHTML(
     "beforeend",
     ORDER.map((k) => {
       const s = SPECIES[k];
-      return `<article class="specimen" data-species="${k}">
-        <div class="specimen__media" data-sc-tilt="5">
-          <span class="specimen__ph" aria-hidden="true">${esc(s.short[0])}</span>
-          <img src="${img(k)}" width="800" height="1000" alt="${esc(s.name)}, full body" loading="lazy" data-optional>
-          ${LOOPS[k] ? `<video class="specimen__loop" muted loop playsinline preload="none" data-src="${LOOPS[k]}" aria-hidden="true"></video>` : ""}
-          <span class="label specimen__zone">${s.zone}</span>
-        </div>
-        <h3>${esc(s.name)}</h3>
-        <p class="latin">${esc(s.latin)}</p>
-        <p class="body">${esc(s.line)}</p>
-        <div class="specimen__actions">
-          <button class="btn btn--ghost btn--sm" type="button" data-inspect="${k}">Inspect in 3D</button>
-          <button class="btn btn--ghost btn--sm" type="button" data-hear="${k}" aria-label="Hear the ${esc(s.short)}">Hear it</button>
+      const c = CARD[k];
+      return `<article class="specimen" data-species="${k}" style="--tint: ${c.tint}">
+        <div class="specimen__card" data-sc-tilt="4">
+          <div class="specimen__media">
+            <span class="specimen__ph" aria-hidden="true">${esc(s.short[0])}</span>
+            <img src="${img(k)}" width="800" height="1000" alt="${esc(s.name)}, full body" loading="lazy" data-optional>
+            ${LOOPS[k] ? `<video class="specimen__loop" muted loop playsinline preload="none" data-src="${LOOPS[k]}" aria-hidden="true"></video>` : ""}
+          </div>
+          <button class="specimen__hear" type="button" data-hear="${k}" aria-label="Hear the ${esc(s.short)}">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </button>
+          <div class="specimen__glass">
+            <ul class="specimen__chips" aria-label="Zone and signal">
+              <li>${s.zone}</li><li>${esc(c.chip)}</li>
+            </ul>
+            <h3>${esc(s.name)}</h3>
+            <p class="latin">${esc(s.latin)}</p>
+            <p class="specimen__line">${esc(s.line)}</p>
+            <button class="btn specimen__inspect" type="button" data-inspect="${k}">Inspect in 3D</button>
+          </div>
         </div>
       </article>`;
     }).join(""),

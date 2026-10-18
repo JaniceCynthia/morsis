@@ -3,7 +3,9 @@ import { initHero } from "./sections/hero";
 import { initDescent } from "./sections/descent";
 import { renderAtlas, initInspector } from "./sections/atlas";
 import { initConsole } from "./sections/console";
-import { initChrome } from "./sections/chrome";
+import { initChrome, keepAccents } from "./sections/chrome";
+import { initStack } from "./sections/stack";
+import { initFt1 } from "./sections/ft1";
 
 declare global {
   interface Window {
@@ -19,21 +21,19 @@ function guardMedia() {
     if (img.complete && img.naturalWidth === 0 && img.src) miss();
     img.addEventListener("error", miss, { once: true });
   });
-  document.querySelectorAll<HTMLImageElement>("img[data-logo]").forEach((img) => {
-    const ok = () => img.closest(".mark")?.classList.add("has-logo");
-    if (img.complete && img.naturalWidth > 0) ok();
-    img.addEventListener("load", ok, { once: true });
-  });
 }
 
 // The engine measures the DOM on mount, so render data-driven markup first.
 renderAtlas();
 guardMedia();
+keepAccents();
 window.ScrollCraft.mount(document.body);
+initStack();
 
 initChrome();
 initInspector();
 initConsole();
 initDescent();
+initFt1();
 initHero();
 initGate();

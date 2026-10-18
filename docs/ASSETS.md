@@ -107,6 +107,8 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 
 ## FT-1 (Tier 1)
 
+> **Superseded 2026-10-18 by the real-time model ([ADR 0003](adr/0003-ft1-as-realtime-exploded-model.md)).** `models/ft1.glb` is `assets-src/ft1/radio-source.glb` (Sketchfab “Grundig Radio FR-250” by Gher, CC BY 4.0) rebranded by `assets-src/ft1/rebrand.py`: the GRUNDIG badge, spec plate, model text, stickers and handwriting are painted out and replaced with a Morsis badge (embossed), rating plate, FT-1 plate, lab stickers and a lime lamp ring; textures are WebP (12 MB → 2.2 MB). `img/posters/ft1.webp` is now a render of that model (the no-WebGL fallback). The F-01/F-02 stills and V-FT1 video below were removed.
+
 | ID | What | Prompt seed (INSTRUMENT +) | Model | Credits | Status |
 |---|---|---|---|---|---|
 | F-01 | FT-1 assembled, hero angle | handheld field transmitter: transducer head, control face with small display, signal scale, 3/4 view | gpt_image_2_5 high/2k | 2.75 | ✅ `img/ft1/F-01.webp`. Reads as pro field-recording hardware: round perforated transducer head, lime ring, spectrogram display, engraved scale, three buttons. |
@@ -146,6 +148,8 @@ The winning model becomes the default for that family. FIELD, SPECIMEN and INSTR
 Each sample was checked on a spectrogram (`scratchpad/A-sheet.jpg`); raven-5 and humpback-3 were regenerated. Calls are 0.5–4.7 s, trimmed to the active span, high-passed per species (raven 180 Hz, starling 500, prairie 350, dolphin 900, elephant and humpback 15). Every sample: mono, trimmed, normalised to −1 dBFS peak, exported as `.webm` (Opus) with an `.mp3` fallback, in `public/assets/audio/{species}/`. UI sounds (transmit, receive, decode tick) are synthesized with Tone.js and cost nothing.
 
 ## Identity and Field kit
+
+> **Rebranded 2026-10-18.** The identity is now the supplied MORSIS logo (traced to `brand/logo*.svg`, `mark*.svg`, `logo-sprite.svg`, `favicon.svg`), Neue Montreal + PP Editorial New Italic, and the five-colour palette. TP-01–04 were edited with `gpt_image_2_5` (high/2k) to the new wordmark (TP-01 also carries the new FT-1 in its foam); the model's redrawn logos were then replaced with the exact traced wordmark by `assets-src/touchpoints/fix-logo.py`. TP-05, TP-06 and OG-01 are recomposed by `assets-src/brand/compose.py`. HERO relief: `img/hero/relief-*.webp` from `assets-src/hero/relief-source.png` (`gpt_image_2_5` high/4k, plaster bas-relief of ravens, a starling murmuration and clouds) plus `flat-480.webp`, the same wall with the carving blurred out. H-01 and `posters/hero.webp` were removed.
 
 | ID | What | Tool | Credits | Status |
 |---|---|---|---|---|

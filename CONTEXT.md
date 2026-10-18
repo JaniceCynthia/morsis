@@ -13,8 +13,12 @@ Morsis's translation model; it turns animal signals into English and composes re
 _Avoid_: the AI, chatbot, translator
 
 **FT-1**:
-The Morsis field transmitter — the physical instrument a researcher uses to listen, segment, map meaning and emit. Made of seven layers.
-_Avoid_: device, gadget, collar
+The Morsis field transmitter: a rugged, worn field radio a researcher uses to listen, segment, map meaning and emit. Its parts are grouped into the four Layers.
+_Avoid_: device, gadget, collar, radio (in copy)
+
+**Layer**:
+One of the FT-1's four working stages, in order: Listen, Segment, Map meaning, Emit. Each Layer is carried by one or two physical parts inside the FT-1.
+_Avoid_: step, module, stage
 
 **Field station**:
 One of Morsis's recording sites, numbered (e.g. Field station 07), spanning sky to seabed.
