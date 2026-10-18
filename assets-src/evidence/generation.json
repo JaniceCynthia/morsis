@@ -1,0 +1,18 @@
+{
+  "provider": "Higgsfield",
+  "job_id": "dde07b74-993b-4a5d-81b4-595b82fc9bbf",
+  "generated_on": "2026-10-18",
+  "params": {
+    "model": "gpt_image_2_5",
+    "aspect_ratio": "16:9",
+    "count": 1,
+    "prompt": "Create a sophisticated photorealistic architectural bas-relief wall texture for an animal communication research website. Wide 16:9 composition, straight-on orthographic view, full bleed, no frame. Entire image is one continuous matte warm off-white ivory plaster wall (#F1F1EA), with exquisitely carved sculptural African elephants emerging from the same plaster material. A large adult African elephant in graceful side profile facing left occupies the RIGHT half, from x=55% to 94%, ears open, trunk extending gently toward a smaller calf near x=48%, their trunks nearly meeting in a quiet act of communication. Subtle third elephant profile toward far right in shallower relief. Beautiful accurate anatomy, intricate sculpted skin wrinkles, sculptural high-relief depth and delicate shadows, museum craftsmanship. Sparse low grasses carved along bottom-right only. Soft natural raking light from upper left creates delicate warm gray shadows and luminous ivory highlights. LEFT 43% is mostly plain unmarked plaster negative space for a large headline; top 12% also mostly quiet. No paint, no colored animals, no photography of real live animals, no dark outlines, no birds, no text, no letters, no logos, no gradient background, no pedestals. Match a refined cream plaster relief sculpture of ravens and cloud formations: tactile mineral surface, monochrome ivory-on-ivory, softly detailed museum frieze. Elephants are clearly visible enough to recognize when locally revealed under a mouse cursor."
+  },
+  "source": "elephant-relief-source.png",
+  "width": 1344,
+  "height": 752,
+  "web_assets": {
+    "relief": "public/assets/img/evidence/relief-1440.webp",
+    "flat": "public/assets/img/evidence/flat-480.webp"
+  }
+}
