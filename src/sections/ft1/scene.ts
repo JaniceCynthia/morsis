@@ -185,12 +185,59 @@ export async function start(sec: HTMLElement, canvas: HTMLCanvasElement, tagsEl:
   const tmp = new THREE.Vector3();
   const t0 = performance.now();
 
+  // ---- drag to rotate --------------------------------------------------------
+  // The visitor can turn the instrument at any point in the teardown. Yaw is
+  // free; pitch is limited so the radio never flips. A flick keeps spinning
+  // briefly, then settles where it was left.
+  let yaw = 0, pitch = 0, vYaw = 0, vPitch = 0;
+  let drag: { id: number; x: number; y: number; t: number } | null = null;
+  canvas.addEventListener("pointerdown", (e) => {
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() };
+    canvas.setPointerCapture(e.pointerId);
+    canvas.classList.add("is-dragging");
+    vYaw = vPitch = 0;
+    sec.classList.add("was-dragged");
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const now = performance.now();
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    const dt = Math.max(1, now - drag.t);
+    const dyaw = dx * 0.0085, dpitch = dy * 0.006;
+    yaw += dyaw;
+    pitch = clamp(pitch + dpitch, -0.45, 0.6);
+    vYaw = (dyaw / dt) * 16;
+    vPitch = (dpitch / dt) * 16;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: now };
+    dirty = true;
+  });
+  const release = (e: PointerEvent) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag = null;
+    canvas.classList.remove("is-dragging");
+    if (still) vYaw = vPitch = 0;
+  };
+  canvas.addEventListener("pointerup", release);
+  canvas.addEventListener("pointercancel", release);
+  // Double-click puts it back to the guided view.
+  canvas.addEventListener("dblclick", () => {
+    yaw = pitch = vYaw = vPitch = 0;
+    dirty = true;
+  });
+
   const frame = (now: number) => {
     requestAnimationFrame(frame);
     if (!visible || !W) return;
     const pTarget = parseFloat(getComputedStyle(sec).getPropertyValue("--sc-p")) || 0;
     const settled = Math.abs(pTarget - pCur) < 0.0005;
-    if (settled && !dirty && still) return;
+    const coasting = !drag && (Math.abs(vYaw) > 1e-4 || Math.abs(vPitch) > 1e-4);
+    if (settled && !dirty && !coasting && still) return;
+    if (coasting) {
+      yaw += vYaw;
+      pitch = clamp(pitch + vPitch, -0.45, 0.6);
+      vYaw *= 0.92;
+      vPitch *= 0.92;
+    }
     pCur = pCur < 0 || still ? pTarget : pCur + (pTarget - pCur) * 0.14;
     dirty = false;
     const p = pCur;
@@ -212,7 +259,8 @@ export async function start(sec: HTMLElement, canvas: HTMLCanvasElement, tagsEl:
     camera.position.set(Math.sin(az) * Math.cos(el) * dist, Math.sin(el) * dist + 0.01, Math.cos(az) * Math.cos(el) * dist);
     camera.lookAt(0, portrait ? -0.03 : 0.018, lerp(0, -0.01, spread));
     // A slow sway so the object feels held, not rendered.
-    rig.rotation.y = still ? 0 : Math.sin((now - t0) / 4200) * 0.035;
+    rig.rotation.y = yaw + (still ? 0 : Math.sin((now - t0) / 4200) * 0.035);
+    rig.rotation.x = pitch;
     key.position.set(0.4, 0.55, 0.5);
 
     LAYER_WINDOWS.forEach((w, i) => {
