@@ -112,6 +112,9 @@ export function initConsole() {
       tabs[k].tabIndex = k === m ? 0 : -1;
       panels[k].hidden = k !== m;
     });
+    chips.hidden = m !== "channel";
+    topics.hidden = m === "channel";
+    $("#try-label").textContent = m === "channel" ? "Try" : "Steer it toward";
     if (m === "channel") selectSpecies(state.sp);
     else {
       selectPair(state.pair.id);
