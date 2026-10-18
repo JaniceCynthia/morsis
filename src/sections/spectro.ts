@@ -12,7 +12,7 @@ export function initSpectro(cv: HTMLCanvasElement) {
     h = Math.max(1, Math.round(cv.clientHeight * dpr));
     cv.width = w;
     cv.height = h;
-    ctx.fillStyle = "#050905";
+    ctx.fillStyle = "#0B0C09";
     ctx.fillRect(0, 0, w, h);
     grid();
   };
@@ -33,7 +33,7 @@ export function initSpectro(cv: HTMLCanvasElement) {
     const data = fft();
     // Shift the existing image left, then paint the newest column on the right.
     ctx.drawImage(cv, step, 0, w - step, h, 0, 0, w - step, h);
-    ctx.fillStyle = "#050905";
+    ctx.fillStyle = "#0B0C09";
     ctx.fillRect(w - step, 0, step, h);
     if (!data) return;
     const nyq = sampleRate() / 2;

@@ -74,8 +74,8 @@ morsis/
 └─ .env.local                GEMINI_API_KEY (never committed)
 ```
 
-**Fonts** (Google Fonts, open licence): Instrument Serif for display, Geist for body, Geist Mono for HUD and readouts.
-**Palette** (from the concept): `--abyss #050A06`, `--forest #13240F`, `--olive #5E7A1C`, `--lime #D4F53F`, `--lime-2 #B7DB25`, `--ink #10110D`, `--ink-2 #55574D`, `--paper #F1F1EA`, `--paper-2 #E6E7DD`.
+**Fonts** (revised 2026-10-18): Neue Montreal for every fact, label and interface; PP Editorial New Italic on one or two alive words per line; Geist Mono only for live numbers.
+**Palette** (revised 2026-10-18): Lab Paper `#F1F1EA`, Field Ink `#10110D` (the page base), Signal Lime `#D4F53F`, Olive `#5E7A1C` (Land), Forest `#13240F` (Sea).
 
 ### `/api/decode` contract
 

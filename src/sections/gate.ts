@@ -4,7 +4,7 @@ import { loadAmbience, loadBank, loadScore, startScore, unlock } from "../audio/
 import { ORDER } from "../decode/species";
 import { $ } from "./dom";
 
-const PRELOAD_IMAGES = ["/assets/img/posters/hero.webp", "/assets/img/posters/descent.webp", "/assets/img/posters/ft1.webp"];
+const PRELOAD_IMAGES = ["/assets/img/hero/relief-1440.webp", "/assets/img/posters/descent.webp"];
 
 export function initGate() {
   const gate = $("#gate");
@@ -49,4 +49,11 @@ export function initGate() {
   btnSound.addEventListener("click", () => enter(true));
   btnQuiet.addEventListener("click", () => enter(false));
   btnSound.focus();
+  // Dev only: ?nogate skips straight in, muted, for scripted visual checks.
+  if (import.meta.env.DEV && new URLSearchParams(location.search).has("nogate")) {
+    gate.classList.add("is-done");
+    document.documentElement.style.overflow = "";
+    document.dispatchEvent(new CustomEvent("morsis:enter", { detail: { withSound: false } }));
+    gate.remove();
+  }
 }
