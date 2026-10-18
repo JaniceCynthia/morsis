@@ -1,7 +1,7 @@
 // Vercel function. All logic lives in server/decode.ts so local preview and
 // production behave the same.
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { handleDecode } from "../server/decode";
+import { handleDecode } from "../server/decode.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {

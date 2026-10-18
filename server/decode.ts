@@ -1,8 +1,8 @@
 // Decode-3 proxy: the only place the Gemini key is read. Shared by the Vercel
 // function (api/decode.ts) and the Vite dev/preview middleware (vite.config.ts).
 import { GoogleGenAI } from "@google/genai";
-import { SPECIES, PAIRS, type SpeciesKey } from "../src/decode/species";
-import type { DecodeRequest, DecodeResponse } from "../src/decode/types";
+import { SPECIES, PAIRS, type SpeciesKey } from "../src/decode/species.js";
+import type { DecodeRequest, DecodeResponse } from "../src/decode/types.js";
 
 const PRIMARY = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 const FALLBACK = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.5-flash-lite";
@@ -47,7 +47,7 @@ const eavesdropSchema = {
 
 // ---- prompts ----------------------------------------------------------------
 
-const VOICE = `Voice: the animal's own point of view, concrete and sensory (distance, pressure, smell, light, kin, food, danger, routes). Short clauses, a little strange, wondrous but believable. No human pop culture, no jokes about pets, no emoji, no quotation marks, no em dashes.`;
+const VOICE = `Voice: the animal speaking for itself, rendered by a careful translator into plain, natural English: complete sentences, normal grammar, sentence case. Concrete and sensory (distance, pressure, smell, light, kin, food, danger, routes), with the animal's own concerns rather than human ones. Simple everyday words; no clipped telegraphic fragments, no scientific jargon (signature, sentinel, conspecific, infrasonic). Wondrous but believable. Never open with the word Strange, and do not dwell on a sound being strange, foreign or new. No human pop culture, no jokes about pets, no emoji, no quotation marks, no em dashes.`;
 
 const SYSTEM = `You are Decode-3, the interspecies translation model of Morsis, a bioacoustics research lab. You render animal signals as English hypotheses grounded in published behavioural research. You never break character and never mention being an AI. Output only the requested JSON.`;
 
@@ -58,7 +58,8 @@ function channelPrompt(req: DecodeRequest): string {
 
 Ground the reply in real ${sp.name} biology and behaviour: ${sp.facts}
 ${VOICE}
-At most 2 sentences and 32 words. If the message is unclear, rude or impossible for the animal to understand, the animal still answers in character (confusion, alarm, curiosity).
+The reply must respond directly to what the researcher said or asked, as this animal would understand it; someone reading only the message and the reply should see the connection. Treat the biology above as background: use at most one detail of it, and only where it answers the message, never as a recited fact. If the message names something the animal has no concept of (a backflip, a favourite colour, love), it answers through the nearest thing it does know. If it is gibberish, the animal answers with brief, in-character confusion or caution.
+At most 2 sentences and 32 words.
 ${hist ? `Earlier on this channel:\n${hist}\n` : ""}Researcher's message: ${JSON.stringify(req.message || "")}
 
 Fields: signal (call actually produced, using this species' real call types), units (how many call units), contour (pitch shape, 0 low to 1 high), durationSec (realistic for this species; elephant rumbles and humpback units are long, prairie dog chirps and dolphin whistles short), mood, decoded (the English reply), confidence, note (one true, specific, citable field fact behind the reply, under 22 words).`;
@@ -74,7 +75,7 @@ function eavesdropPrompt(req: DecodeRequest): string {
 Individual A: ${pair.a.label} (${a.name}). ${a.facts}
 Individual B: ${pair.b.label} (${b.name}). ${b.facts}
 Situation: ${pair.situation}
-${req.topic ? `The exchange is about: ${JSON.stringify(req.topic)}\n` : ""}${req.message ? `A researcher has just interjected, encoded into their calls: ${JSON.stringify(req.message)}. Both react to this strange new signal in character.\n` : ""}${hist ? `Earlier in this exchange:\n${hist}\n` : ""}
+${req.topic ? `The exchange is about: ${JSON.stringify(req.topic)}\n` : ""}${req.message ? `A researcher has just interjected, encoded into their calls: ${JSON.stringify(req.message)}. Both react to what it says, in character.\n` : ""}${hist ? `Earlier in this exchange:\n${hist}\n` : ""}
 ${VOICE}
 Each decoded turn at most 18 words. Each turn's signal, units, contour and durationSec must match that individual's species. Give a single note: one true, specific, citable field fact about this kind of exchange, under 22 words.`;
 }
@@ -113,7 +114,7 @@ function ai(): GoogleGenAI | null {
 async function callModel(model: string, prompt: string, schema: object): Promise<unknown> {
   const g = ai();
   if (!g) throw Object.assign(new Error("no key"), { status: 0 });
-  const run = (thinking: boolean) =>
+  const run = (thinking?: string) =>
     Promise.race([
       g.models.generateContent({
         model,
@@ -124,19 +125,23 @@ async function callModel(model: string, prompt: string, schema: object): Promise
           responseJsonSchema: schema,
           temperature: 1,
           maxOutputTokens: 900,
-          ...(thinking ? { thinkingConfig: { thinkingLevel: "MINIMAL" as never } } : {}),
+          ...(thinking ? { thinkingConfig: { thinkingLevel: thinking as never } } : {}),
         },
       }),
       new Promise<never>((_, rej) => setTimeout(() => rej(Object.assign(new Error("timeout"), { status: 504 })), TIMEOUT_MS)),
     ]);
+  // Not every model accepts every thinking level (gemini-3.8-flash rejects
+  // MINIMAL); step down on a 400 so the reply stays fast.
   let res;
-  try {
-    res = await run(true);
-  } catch (e: any) {
-    // Some models reject thinking config; retry once without it.
-    if (e?.status === 400) res = await run(false);
-    else throw e;
+  for (const level of ["MINIMAL", "LOW", undefined]) {
+    try {
+      res = await run(level);
+      break;
+    } catch (e: any) {
+      if (e?.status !== 400 || !level) throw e;
+    }
   }
+  if (!res) throw Object.assign(new Error("empty"), { status: 502 });
   const text = res.text;
   if (!text) throw Object.assign(new Error("empty"), { status: 502 });
   return JSON.parse(text);
@@ -153,7 +158,12 @@ function cleanSignal(s: any) {
     contour: contour.length >= 3 ? contour.slice(0, 9) : [0.5, 0.6, 0.4, 0.55, 0.45, 0.5],
     durationSec: clamp(Number(s?.durationSec) || 2, 0.3, 14),
     mood: ["calm", "curious", "alarm", "affiliative"].includes(s?.mood) ? s.mood : "curious",
-    decoded: String(s?.decoded || "").replace(/—/g, ", ").slice(0, 280),
+    decoded: String(s?.decoded || "")
+      .replace(/—/g, ", ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/^./, (c) => c.toUpperCase())
+      .slice(0, 280),
     confidence: clamp(Number(s?.confidence) || 0.6, 0.45, 0.9),
   };
 }
