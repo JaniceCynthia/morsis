@@ -437,6 +437,40 @@ img[data-optional].is-missing { visibility: hidden; }
 .findings cite { display: block; margin-top: var(--sc-2); font: italic 400 var(--sc-t-sm) / 1.4 var(--font-accent); color: var(--olive); }
 @media (max-width: 760px) { .findings { grid-template-columns: 1fr; } }
 
+/* -------------------------------------------------------------- identity -- */
+.identity { background: var(--ink-2); }
+.identity__head { margin-bottom: var(--sc-7); }
+.identity__head .display { max-width: 16ch; }
+.identity__board { position: relative; margin: 0 0 var(--sc-4); border-radius: var(--sc-r-lg); overflow: hidden; background: var(--ink); box-shadow: var(--sc-edge), var(--sc-e2); }
+.identity__board img { width: 100%; height: auto; }
+/* Captions sit on the image as a frosted tag, readable on paper, lime or photo. */
+.identity__cap { position: absolute; left: var(--sc-4); bottom: var(--sc-4); z-index: 1; padding: 0.4rem 0.65rem; border-radius: var(--sc-r-sm); font: 400 0.6875rem / 1 var(--sc-font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper); background: color-mix(in oklab, var(--ink) 62%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+/* Three columns of 3:2 tiles; the tote takes a 2×2 block and the wordmark a 2×1 strip, so every photo keeps close to its own proportions. */
+.identity__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-4); }
+.tile { position: relative; margin: 0; aspect-ratio: 3 / 2; border-radius: var(--sc-r-lg); overflow: hidden; background: var(--paper-2); box-shadow: var(--sc-edge), var(--sc-e2); }
+.tile > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 700ms var(--sc-ease-out); }
+.tile:hover > img { transform: scale(1.03); }
+.tile__img--top { object-position: 50% 30%; }
+.tile--wide { grid-column: span 2; aspect-ratio: auto; }
+.tile--hero { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+.tile--paper { background: var(--paper); }
+.tile--lime { background: var(--lime); }
+.tile > .tile__logo { inset: 50% auto auto 50%; width: min(64%, 34rem); height: auto; object-fit: contain; translate: -50% -50%; }
+.tile > .tile__logo--mark { width: 46%; }
+.tile:hover > .tile__logo { transform: none; }
+.identity__proof { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-6); margin: var(--sc-8) 0 0; padding: 0; }
+.identity__proof li { padding-top: var(--sc-5); border-top: 1px solid var(--sc-hairline-strong); }
+.identity__proof h3 { margin: 0; font-family: var(--sc-font-display); font-weight: 400; font-size: var(--sc-t-lg); line-height: 1.2; letter-spacing: -0.015em; }
+.identity__proof p { margin: var(--sc-2) 0 0; font-size: var(--sc-t-sm); line-height: 1.55; color: var(--sc-ink-soft); max-width: 38ch; }
+.identity__proof b { color: var(--sc-ink); }
+@media (max-width: 760px) {
+  .identity__grid { grid-template-columns: minmax(0, 1fr); gap: var(--sc-3); }
+  .tile--wide, .tile--hero { grid-column: auto; grid-row: auto; aspect-ratio: 3 / 2; }
+  .identity__proof { grid-template-columns: 1fr; gap: var(--sc-5); }
+  .identity__cap { left: var(--sc-3); bottom: var(--sc-3); }
+}
+@media (prefers-reduced-motion: reduce) { .tile > img { transition: none; } .tile:hover > img { transform: none; } }
+
 /* ----------------------------------------------------------------- close -- */
 .close { overflow: clip; padding: calc(var(--bar-h) + var(--sc-8)) 0 0; }
 .close__quote { margin: 0; max-width: 16ch; font-size: clamp(3rem, 1.6rem + 5.6vw, 7.5rem); line-height: 0.92; letter-spacing: var(--track-display); text-wrap: balance; }
