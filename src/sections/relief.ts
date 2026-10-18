@@ -1,6 +1,5 @@
-// Hero relief: a flat Lab Paper plaster wall where a carving of ravens, a
-// starling murmuration and clouds rises wherever the pointer passes, holds for
-// a moment, then sinks back into the wall.
+// A flat Lab Paper plaster wall where a carving rises wherever the pointer
+// passes, holds for a moment, then sinks back into the wall.
 //
 // Two images: the carved wall, and the same wall with the carving taken out
 // (only its broad light falloff). A "heat" mask follows the pointer; where it
@@ -38,6 +37,7 @@ const SHOW = `
 precision highp float;
 uniform sampler2D uRelief, uFlat, uMask;
 uniform vec2 uScale, uShift, uCursor, uPx;
+uniform vec3 uReliefTint;
 uniform float uFloor, uGlow;
 varying vec2 vUv;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
@@ -47,7 +47,7 @@ void main() {
   float m = max(smoothstep(0.0, 0.42, heat), uFloor);
   // Light comes from the upper left, so a rising form's shading arrives from there.
   vec2 slide = vec2(-0.0016, 0.0022) * (1.0 - m) * uScale;
-  vec3 carved = texture2D(uRelief, tuv + slide).rgb;
+  vec3 carved = clamp(texture2D(uRelief, tuv + slide).rgb + uReliefTint, 0.0, 1.0);
   vec3 wall = texture2D(uFlat, tuv).rgb + (hash(floor(vUv / uPx)) - 0.5) * 0.022;
   vec3 col = mix(wall, carved, m);
   // A faint Signal Lime breath on the edge that is lifting, and near the pointer.
@@ -62,13 +62,28 @@ void main() {
 const HOLD_S = 1.2;
 const BRUSH_CSS = 110; // radius in CSS px: a ~220 px reveal
 
-export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
+interface ReliefOptions {
+  image?: string;
+  imageLarge?: string;
+  flat?: string;
+  anchorX?: number;
+  anchorY?: number;
+  sweepY?: number;
+  reliefTint?: readonly [number, number, number];
+}
+
+export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement, options: ReliefOptions = {}) {
   const gl = canvas.getContext("webgl", { antialias: false, alpha: false, premultipliedAlpha: false, preserveDrawingBuffer: false });
   if (!gl) {
     host.classList.add("no-relief");
     return;
   }
   const still = reduceMotion();
+  canvas.addEventListener("webglcontextlost", () => {
+    host.classList.remove("has-relief");
+    host.classList.add("no-relief");
+    visible = false;
+  });
 
   const compile = (type: number, src: string) => {
     const s = gl.createShader(type)!;
@@ -111,6 +126,10 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
   const load = (t: WebGLTexture, src: string, main: boolean) => {
     const img = new Image();
     img.decoding = "async";
+    img.onerror = () => {
+      host.classList.remove("has-relief");
+      host.classList.add("no-relief");
+    };
     img.onload = () => {
       gl.bindTexture(gl.TEXTURE_2D, t);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -124,8 +143,8 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
     img.src = src;
   };
   const big = Math.max(screen.width, screen.height) * Math.min(2, devicePixelRatio || 1) > 1700;
-  load(relief, big ? "/assets/img/hero/relief-2560.webp" : "/assets/img/hero/relief-1440.webp", true);
-  load(flat, "/assets/img/hero/flat-480.webp", false);
+  load(relief, big ? (options.imageLarge ?? options.image ?? "/assets/img/hero/relief-2560.webp") : (options.image ?? "/assets/img/hero/relief-1440.webp"), true);
+  load(flat, options.flat ?? "/assets/img/hero/flat-480.webp", false);
 
   // Two heat buffers at quarter resolution, ping-ponged each frame.
   const Q = 4;
@@ -175,15 +194,14 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
   host.addEventListener("pointerleave", () => (ptr = null));
   const coarse = matchMedia("(hover: none)").matches;
 
-  // On load the wall shows itself once: a slow sweep through the ravens and the
-  // murmuration, so a visitor learns the surface responds before they touch it.
-  const t0 = performance.now();
+  // Reveal once on first view, including sections reached later in the page.
+  let t0: number | null = null;
   const SWEEP_MS = 3600;
-  const sweepPath = (k: number) => ({ x: W * (0.12 + 0.78 * k), y: H * (0.42 - 0.2 * Math.sin(k * Math.PI) + 0.08 * Math.sin(k * 9)) });
+  const sweepPath = (k: number) => ({ x: W * (0.12 + 0.78 * k), y: H * ((options.sweepY ?? 0.42) - 0.2 * Math.sin(k * Math.PI) + 0.08 * Math.sin(k * 9)) });
   // On touch screens a ghost drifts whenever the visitor is not dragging.
   const ghostPath = (t: number) => ({ x: W * (0.55 + 0.33 * Math.sin(t / 5200)), y: H * (0.4 + 0.18 * Math.sin(t / 3700 + 1)) });
 
-  let visible = true;
+  let visible = false;
   new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(canvas);
   let prevT = performance.now();
 
@@ -192,6 +210,7 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
     if (!visible || ready < 2 || !W) return;
     const dt = Math.min(0.05, (now - prevT) / 1000);
     prevT = now;
+    t0 ??= now;
 
     let brush: { x: number; y: number } | null = null;
     const since = now - t0;
@@ -220,12 +239,13 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     cur = 1 - cur;
 
-    // Cover-fit the image, anchored a little right of centre where the birds are.
+    // Cover-fit around the subject, also matching the fallback's object position.
     const ca = W / H, ia = imgW / imgH;
     const sx = ca > ia ? 1 : ca / ia;
     const sy = ca > ia ? ia / ca : 1;
-    const anchorX = 0.58;
+    const anchorX = options.anchorX ?? 0.58;
     const shiftX = 0.5 + (anchorX - 0.5) * (1 - sx);
+    const shiftY = 0.5 + (0.5 - (options.anchorY ?? 0.5)) * (1 - sy);
 
     gl.useProgram(showProg.p);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -237,8 +257,9 @@ export function initRelief(host: HTMLElement, canvas: HTMLCanvasElement) {
     gl.uniform1i(showProg.u("uRelief"), 0);
     gl.uniform1i(showProg.u("uFlat"), 1);
     gl.uniform1i(showProg.u("uMask"), 2);
+    gl.uniform3f(showProg.u("uReliefTint"), ...(options.reliefTint ?? [0, 0, 0]));
     gl.uniform2f(showProg.u("uScale"), sx, sy);
-    gl.uniform2f(showProg.u("uShift"), shiftX, 0.5);
+    gl.uniform2f(showProg.u("uShift"), shiftX, shiftY);
     gl.uniform2f(showProg.u("uPx"), 1 / W, 1 / H);
     const c = brush || { x: -9999, y: -9999 };
     gl.uniform2f(showProg.u("uCursor"), c.x / W, 1 - c.y / H);

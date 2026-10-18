@@ -6,6 +6,8 @@ import { initConsole } from "./sections/console";
 import { initChrome, keepAccents } from "./sections/chrome";
 import { initStack } from "./sections/stack";
 import { initFt1 } from "./sections/ft1";
+import { initRelief } from "./sections/relief";
+import { $ } from "./sections/dom";
 
 declare global {
   interface Window {
@@ -36,4 +38,11 @@ initConsole();
 initDescent();
 initFt1();
 initHero();
+initRelief($("#evidence"), $<HTMLCanvasElement>("#evidence-relief"), {
+  image: "/assets/img/evidence/relief-1440.webp",
+  flat: "/assets/img/hero/flat-480.webp",
+  reliefTint: [0.02, 0.04, 0.055],
+  anchorX: 0.66,
+  sweepY: 0.62,
+});
 initGate();
