@@ -180,26 +180,62 @@
             <div role="tabpanel" id="panel-channel" aria-labelledby="tab-channel">
               <p class="label">Channel</p>
               <div class="species-pick" id="species-pick" role="radiogroup" aria-label="Species"></div>
-              <p class="label">Try</p>
-              <div class="chips" id="chips"></div>
             </div>
             <div role="tabpanel" id="panel-eaves" aria-labelledby="tab-eaves" hidden>
               <p class="label">Intercept</p>
               <div class="pair-pick" id="pair-pick" role="radiogroup" aria-label="Exchange"></div>
-              <p class="label">Steer it toward</p>
-              <div class="chips" id="topics"></div>
             </div>
             <div class="readout mono">
               <div><span>Band</span><b id="ro-band">–</b></div>
               <div><span>Shift</span><b id="ro-shift">0 oct</b></div>
-              <label class="shift"><span>Hearing shift</span><input type="range" id="shift" min="-4" max="4" step="1" value="0" aria-describedby="shift-hint"></label>
+              <label class="shift"><span>Hearing shift</span>
+                <span class="fader"><span class="fader__ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><input type="range" id="shift" min="-4" max="4" step="1" value="0" aria-describedby="shift-hint"></span>
+              </label>
               <p class="hint" id="shift-hint">Elephant rumbles are too low for human ears. Move any call up or down by octaves.</p>
             </div>
           </div>
 
           <div class="console__main">
-            <canvas class="spectro" id="spectro" aria-label="Live spectrogram of the signal" role="img"></canvas>
+            <div class="scope" id="scope">
+              <div class="scope__bar">
+                <div class="scope__tabs" role="tablist" aria-label="Spectrum view">
+                  <button role="tab" id="scope-tab-spec" aria-selected="true" aria-controls="scope-spec" type="button">Spectrum</button>
+                  <button role="tab" id="scope-tab-opt" aria-selected="false" aria-controls="scope-opt" type="button" tabindex="-1">Options</button>
+                </div>
+                <div class="scope__meters mono" aria-hidden="true">
+                  <span class="meter"><b>Lo</b><i><s id="meter-lo"></s></i></span>
+                  <span class="meter"><b>Hi</b><i><s id="meter-hi"></s></i></span>
+                </div>
+              </div>
+              <div class="scope__screen">
+                <div role="tabpanel" id="scope-spec" aria-labelledby="scope-tab-spec" class="scope__plot">
+                  <canvas class="spectro" id="spectro" aria-label="Live spectrogram of the signal" role="img"></canvas>
+                  <div class="scope__freq mono" id="scope-freq" aria-hidden="true"></div>
+                </div>
+                <div role="tabpanel" id="scope-opt" aria-labelledby="scope-tab-opt" class="scope__opts" hidden>
+                  <div class="seg" role="radiogroup" aria-label="Sensitivity"><span class="mono">Sensitivity</span>
+                    <button type="button" role="radio" data-gain="0.8" aria-checked="false">Low</button><button type="button" role="radio" data-gain="1" aria-checked="true">Mid</button><button type="button" role="radio" data-gain="1.3" aria-checked="false">High</button>
+                  </div>
+                  <div class="seg" role="radiogroup" aria-label="Frequency scale"><span class="mono">Scale</span>
+                    <button type="button" role="radio" data-scale="log" aria-checked="true">Log</button><button type="button" role="radio" data-scale="lin" aria-checked="false">Linear</button>
+                  </div>
+                </div>
+                <div class="scope__time mono">
+                  <div class="scope__ticks" id="scope-ticks" aria-hidden="true"></div>
+                  <div class="scope__zoom" role="group" aria-label="Time window">
+                    <button type="button" id="win-dn" aria-label="Shorter window">&minus;</button>
+                    <output id="win-val" aria-live="polite">2</output>
+                    <button type="button" id="win-up" aria-label="Longer window">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <ol class="log" id="log" aria-live="polite"></ol>
+            <div class="try">
+              <p class="label" id="try-label">Try</p>
+              <div class="chips" id="chips"></div>
+              <div class="chips" id="topics" hidden></div>
+            </div>
             <form class="composer" id="composer" autocomplete="off">
               <label class="sr-only" for="msg">Message</label>
               <input id="msg" name="msg" maxlength="200" placeholder="Type to the humpback…" required>
