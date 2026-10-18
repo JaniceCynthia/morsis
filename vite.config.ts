@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => {
     plugins: [decodeApi()],
     build: {
       rollupOptions: {
-        input: { main: resolve(__dirname, "index.html"), brand: resolve(__dirname, "brand.html") },
+        input: { main: resolve(__dirname, "index.html") },
       },
     },
   };

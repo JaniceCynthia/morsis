@@ -61,6 +61,7 @@ export function renderAtlas() {
     if (ins) openInspector(ins.dataset.inspect as SpeciesKey);
     if (hear) sample(hear.dataset.hear as SpeciesKey);
   });
+  focusRail(rail);
   rail.querySelectorAll<HTMLImageElement>("img[data-optional]").forEach((i) =>
     i.addEventListener("load", () => i.previousElementSibling?.remove(), { once: true }),
   );
@@ -76,6 +77,35 @@ export function renderAtlas() {
     }
   }, { threshold: 0.35 });
   rail.querySelectorAll<HTMLVideoElement>(".specimen__loop").forEach((v) => io.observe(v));
+}
+
+// As the rail pans, the card passing the middle of the screen swells and its
+// neighbours settle back, so there is always one specimen in focus. The scale
+// rides on the article; the card inside keeps its pointer tilt.
+function focusRail(rail: HTMLElement) {
+  const cards = [...rail.querySelectorAll<HTMLElement>(".specimen")];
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let on = false;
+  const frame = () => {
+    if (!on) return;
+    requestAnimationFrame(frame);
+    const mid = innerWidth / 2;
+    // How far a card centre can be from the middle before it is fully "away".
+    const reach = Math.max(260, innerWidth * 0.32);
+    for (const c of cards) {
+      // The scale is centred, so it never moves a card's centre: no feedback.
+      const r = c.getBoundingClientRect();
+      const centre = r.left + r.width / 2;
+      const t = Math.min(1, Math.abs(centre - mid) / reach);
+      const focus = 1 - t * t * (3 - 2 * t);
+      c.style.setProperty("--focus", focus.toFixed(3));
+    }
+  };
+  new IntersectionObserver(([e]) => {
+    const was = on;
+    on = e.isIntersecting;
+    if (on && !was) requestAnimationFrame(frame);
+  }).observe(rail);
 }
 
 function sample(k: SpeciesKey) {

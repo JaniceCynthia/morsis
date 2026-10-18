@@ -2,7 +2,7 @@
 
 *Understanding the oldest conversation on Earth.*
 
-Morsis is a fictional interspecies signal research lab. This repo holds its public identity: a single scroll-driven landing page and a brand board. It was built for Wonderbuilds26, Track 1 (brief in [TASKS.md](TASKS.md)).
+Morsis is a fictional interspecies signal research lab. This repo holds its public identity: a single scroll-driven landing page. It was built for Wonderbuilds26, Track 1 (brief in [TASKS.md](TASKS.md)).
 
 The page descends from 1,200 m above a cloud sea to 40 m under the ocean, through three habitats (Sky, Land and Sea) and six species. Along the way you can inspect each animal in 3D, take apart the FT-1 field transmitter, and open a channel to talk to an animal. **Decode-3**, the lab's translation model, answers in that species' own voice.
 
@@ -41,7 +41,7 @@ Then set `GEMINI_API_KEY` in `.env.local`. The key is read only on the server an
 | Command | What it does |
 |---|---|
 | `pnpm dev` | Vite dev server, with `/api/decode` mounted as middleware |
-| `pnpm build` | Type-check, then build `index.html` and `brand.html` into `dist/` |
+| `pnpm build` | Type-check, then build `index.html` into `dist/` |
 | `pnpm preview` | Serve the production build locally, including `/api/decode` |
 | `pnpm typecheck` | `tsc --noEmit` |
 
@@ -54,13 +54,12 @@ Then set `GEMINI_API_KEY` in `.env.local`. The key is read only on the server an
 5. **Specimen atlas:** six species. **Inspect in 3D** opens a GLB viewer (drag to rotate, scroll to zoom), and **Hear it** plays a signal sample.
 6. **FT-1 teardown:** a real-time 3D model of the field transmitter. Scrolling opens it one Layer at a time (Listen, Segment, Map meaning, Emit) and names each part. See [ADR 0003](docs/adr/0003-ft1-as-realtime-exploded-model.md).
 7. **Console:** *Open a channel* (you and one animal) or *Eavesdrop* (two animals, and you can interject). Each reply comes with a spectrogram, a decoded English hypothesis, a confidence score and a cited field note.
-8. **Field kit:** the identity applied to real objects. Links to the [brand board](brand.html).
-9. **Evidence:** the published findings the lab builds on.
+8. **Evidence:** the published findings the lab builds on.
 
 ## How it works
 
 ```
-index.html, brand.html     the two pages (multi-page Vite build)
+index.html                 the page
 src/
   main.ts                  boot: mounts the scroll-craft engine and wires each section
   sections/                one module per page section; specimen-viewer.ts is the three.js GLB viewer,
