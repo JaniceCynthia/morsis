@@ -4,7 +4,7 @@ import { EXCHANGES, scriptedReply } from "./scripted";
 import type { SpeciesKey } from "./species";
 import type { DecodeRequest, DecodeResponse } from "./types";
 
-const STORE = "morsis.decode.v1";
+const STORE = "morsis.decode.v2";
 const CLIENT_TIMEOUT_MS = 10000;
 
 function load(): Record<string, DecodeResponse> {
